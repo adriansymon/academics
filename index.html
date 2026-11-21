@@ -1,99 +1,723 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="dark">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Adrian's Academics</title>
- <style>
-  * {
-   box-sizing: border-box;
-  }
-  body {
-   font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive, sans-serif;
-   background-color: #fff0f5;
-   margin: 0;
-   padding: 2vh 2vw;
-   min-height: 100vh;
-   display: flex;
-  }
-  .container {
-   text-align: center;
-   background: #ffffff;
-   padding: 3rem;
-   border-radius: 24px;
-   box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
-   width: 100%;
-   min-height: calc(100vh - 4vh);
-   border: 4px solid #ffb6c1;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-  }
-  h1 {
-   color: #d81b60;
-   margin-top: 0;
-   margin-bottom: 2.5rem;
-   font-size: clamp(2.5rem, 4vw, 4rem);
-   text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.6);
-  }
-  .games-grid {
-   display: grid;
-   /* Larger minimum card width (280px) so cards scale up on big screens */
-   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-   gap: 2rem;
-   width: 100%;
-   flex-grow: 1;
-   align-content: center;
-  }
-  .game-card {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: space-between;
-   background-color: #fff5f8;
-   border: 3px dashed #ff80ab;
-   border-radius: 16px;
-   padding: 18px;
-   width: 100%;
-   text-decoration: none;
-   transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
-  }
-  .game-card:hover {
-   transform: translateY(-6px);
-   background-color: #ffe4e1;
-   box-shadow: 0 8px 16px rgba(255, 105, 180, 0.3);
-  }
-  .game-cover {
-   width: 100%;
-   height: 200px; /* Doubled height from 100px for bigger visuals */
-   object-fit: cover;
-   border-radius: 12px;
-   margin-bottom: 15px;
-   box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  }
-  .game-title {
-   color: #ad1457;
-   font-weight: bold;
-   font-size: 1.35rem; /* Increased font size for classroom visibility */
-   text-align: center;
-   word-break: break-word;
-  }
- </style>
-</head>
-<body>
- <div class="container">
-  <h1>Adrian's Academics</h1>
-  
-  <div class="games-grid">
-   <!-- 1. RRL -->
-   <a href="RRL.html" class="game-card">
-    <img src="bingo-cover.jpg" alt="Bingo Speaking Task" class="game-cover">
-    <span class="game-title">bingo speaking task</span>
-   </a>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adrian Academics — Moving Forward Together</title>
 
-      
-   </a>
+  <!-- Tailwind CSS CDN for responsive layout and utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Inter (clean minimalist UI) & JetBrains Mono (code brackets) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================================
+       1. BASE RESET & THEME TOKENS
+       Fixed original '- { box-sizing: border-box; }' typo to universal '*'
+       ========================================================================= */
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-github-dark: #0d1117;
+      --bg-surface: rgba(22, 27, 34, 0.62);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --neon-purple: #7c3aed;
+      --neon-purple-deep: #6d28d9;
+      --neon-blue: #2563eb;
+      --neon-blue-bright: #3b82f6;
+      --neon-cyan: #06b6d4;
+      --neon-cyan-bright: #22d3ee;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      background-color: var(--bg-github-dark);
+      color: #f0f6fc;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      /* Subtle ambient top glow that blends seamlessly into #0d1117 */
+      background-image:
+        radial-gradient(circle at 18% 0%, rgba(124, 58, 237, 0.12), transparent 42%),
+        radial-gradient(circle at 82% 8%, rgba(6, 182, 212, 0.10), transparent 38%);
+    }
+
+    /* =========================================================================
+       2. HERO BANNER (3:1 ASPECT RATIO ON DESKTOP)
+       ========================================================================= */
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      /* Responsive height on small screens, exact 3:1 ratio on tablet/desktop */
+      min-height: 280px;
+      border-radius: 24px;
+      overflow: hidden;
+      background-color: #0d1117;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        0 24px 64px -16px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+    }
+
+    @media (min-width: 768px) {
+      .hero-banner {
+        aspect-ratio: 3 / 1;
+        min-height: 300px;
+      }
+    }
+
+    /* Subtle technical dot-grid texture inside the banner for studio depth */
+    .hero-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at center, black 35%, transparent 82%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 82%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* =========================================================================
+       3. FLOATING 3D ABSTRACT SHAPES & NEON ORBS
+       Layered with radial studio highlights + soft blur to shine through glass
+       ========================================================================= */
+    .orb {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      will-change: transform;
+      z-index: 2;
+    }
+
+    /* Deep Purple 3D Sphere (Left-Top) */
+    .orb-purple {
+      width: clamp(180px, 26vw, 340px);
+      height: clamp(180px, 26vw, 340px);
+      top: -18%;
+      left: 10%;
+      background: radial-gradient(
+        circle at 32% 30%,
+        #c084fc 0%,
+        var(--neon-purple) 42%,
+        var(--neon-purple-deep) 74%,
+        rgba(76, 29, 149, 0.1) 100%
+      );
+      filter: blur(26px);
+      opacity: 0.78;
+      animation: float-slow 11s ease-in-out infinite;
+    }
+
+    /* Electric Blue 3D Pill/Orb (Center-Bottom behind glass card) */
+    .orb-blue {
+      width: clamp(200px, 28vw, 370px);
+      height: clamp(140px, 19vw, 250px);
+      bottom: -24%;
+      left: 36%;
+      background: radial-gradient(
+        circle at 40% 35%,
+        #93c5fd 0%,
+        var(--neon-blue-bright) 38%,
+        var(--neon-blue) 70%,
+        rgba(30, 58, 138, 0.1) 100%
+      );
+      filter: blur(34px);
+      opacity: 0.75;
+      animation: float-medium 9.5s ease-in-out infinite reverse;
+    }
+
+    /* Vibrant Cyan 3D Sphere (Right-Top) */
+    .orb-cyan {
+      width: clamp(160px, 23vw, 310px);
+      height: clamp(160px, 23vw, 310px);
+      top: -12%;
+      right: 11%;
+      background: radial-gradient(
+        circle at 35% 32%,
+        #a5f3fc 0%,
+        var(--neon-cyan-bright) 40%,
+        var(--neon-cyan) 72%,
+        rgba(8, 145, 178, 0.1) 100%
+      );
+      filter: blur(28px);
+      opacity: 0.75;
+      animation: float-drift 12.5s ease-in-out infinite;
+    }
+
+    /* Sculpted 3D Accent Ring (Sharp-soft hybrid for 3D geometric depth) */
+    .shape-3d-torus {
+      position: absolute;
+      width: clamp(90px, 12vw, 155px);
+      height: clamp(90px, 12vw, 155px);
+      right: 23%;
+      bottom: 8%;
+      border-radius: 36% 64% 58% 42% / 44% 38% 62% 56%;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.85), rgba(59, 130, 246, 0.7), rgba(124, 58, 237, 0.85));
+      filter: blur(14px);
+      opacity: 0.65;
+      z-index: 2;
+      pointer-events: none;
+      animation: float-spin 15s ease-in-out infinite;
+    }
+
+    /* =========================================================================
+       4. GLOWING CODE BRACKETS (</>) BEHIND THE FROSTED GLASS
+       Positioned to cast colorful blurred reflections through the glass card
+       ========================================================================= */
+    .code-brackets-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      pointer-events: none;
+      z-index: 3;
+      user-select: none;
+    }
+
+    .code-glyph {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .code-glyph-left {
+      font-size: clamp(3.5rem, 8.5vw, 7.5rem);
+      background: linear-gradient(135deg, #c084fc 0%, #60a5fa 60%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0.42;
+      filter: drop-shadow(0 0 26px rgba(124, 58, 237, 0.75)) blur(1px);
+      transform: rotate(-8deg) translateX(12%);
+      animation: float-slow 10s ease-in-out infinite;
+    }
+
+    .code-glyph-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(5.5rem, 13vw, 11rem);
+      background: linear-gradient(90deg, rgba(124, 58, 237, 0.65), rgba(59, 130, 246, 0.65), rgba(34, 211, 238, 0.7));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0.55;
+      filter: drop-shadow(0 0 32px rgba(34, 211, 238, 0.55)) blur(2px);
+      z-index: 3;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .code-glyph-right {
+      font-size: clamp(3.5rem, 8.5vw, 7.5rem);
+      background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 55%, #a855f7 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0.42;
+      filter: drop-shadow(0 0 26px rgba(6, 182, 212, 0.75)) blur(1px);
+      transform: rotate(8deg) translateX(-12%);
+      animation: float-medium 11.5s ease-in-out infinite;
+    }
+
+    /* =========================================================================
+       5. CENTRAL FROSTED GLASSMORPHISM CARD
+       Crisp white border, soft inner glow, and heavy translucent backdrop blur
+       ========================================================================= */
+    .hero-glass-card {
+      position: relative;
+      z-index: 10;
+      width: min(88%, 620px);
+      padding: clamp(1.75rem, 3.6vw, 2.75rem) clamp(1.5rem, 4.5vw, 3.5rem);
+      text-align: center;
+      border-radius: 20px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.11) 0%,
+        rgba(255, 255, 255, 0.04) 100%
+      );
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        /* Soft inner studio glow */
+        inset 0 1px 1px rgba(255, 255, 255, 0.42),
+        inset 0 0 28px rgba(255, 255, 255, 0.08),
+        /* Soft colorful outer ambient shadow */
+        0 20px 50px rgba(0, 0, 0, 0.55),
+        0 0 40px rgba(59, 130, 246, 0.14);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+    }
+
+    .hero-glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.38);
+    }
+
+    /* =========================================================================
+       6. GAMES / ACTIVITIES GRID & GLASS CARDS
+       Preserves original .games-grid and .game-card structure in dark glass UI
+       ========================================================================= */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .game-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 420px;
+      justify-self: center;
+      padding: 1rem;
+      border-radius: 20px;
+      text-decoration: none;
+      background: linear-gradient(
+        155deg,
+        rgba(30, 37, 48, 0.68) 0%,
+        rgba(17, 22, 30, 0.78) 100%
+      );
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 10px 30px -10px rgba(0, 0, 0, 0.65);
+      transition:
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.28s ease,
+        box-shadow 0.28s ease,
+        background-color 0.28s ease;
+      overflow: hidden;
+    }
+
+    .game-card:hover,
+    .game-card:focus-visible {
+      transform: translateY(-6px);
+      border-color: rgba(56, 189, 248, 0.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 18px 36px -12px rgba(0, 0, 0, 0.8),
+        0 0 28px -4px rgba(34, 211, 238, 0.28),
+        0 0 42px -10px rgba(124, 58, 237, 0.25);
+      outline: none;
+    }
+
+    .game-cover-wrapper {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      /* Polished fallback gradient if local image is unavailable */
+      background: linear-gradient(135deg, #161b22 0%, #1e1b4b 52%, #083344 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .game-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .game-card:hover .game-cover {
+      transform: scale(1.04);
+    }
+
+    .game-title {
+      color: #f8fafc;
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+      text-align: left;
+      word-break: break-word;
+      transition: color 0.25s ease;
+    }
+
+    .game-card:hover .game-title {
+      color: #38bdf8;
+    }
+
+    /* =========================================================================
+       7. AMBIENT FLOATING ANIMATIONS
+       ========================================================================= */
+    @keyframes float-slow {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(16px, -14px) scale(1.05); }
+    }
+
+    @keyframes float-medium {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-18px, -12px) scale(1.04); }
+    }
+
+    @keyframes float-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-14px, 16px) scale(1.06); }
+    }
+
+    @keyframes float-spin {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(12px, -16px) rotate(24deg); }
+    }
+
+    /* Respect user reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+      .orb, .shape-3d-torus, .code-glyph-left, .code-glyph-right {
+        animation: none;
+      }
+      .game-card, .game-cover, .hero-glass-card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- Main Page Wrapper (centered, max-width 1200px) -->
+  <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex flex-col min-h-screen">
+
+    <!-- =======================================================================
+         HERO BANNER SECTION (3:1 Aspect Ratio on Desktop)
+         ======================================================================= -->
+    <header id="heroBanner" class="hero-banner mb-12 sm:mb-16" aria-label="Adrian Academics Banner">
+      <!-- Subtle dark dot-grid overlay -->
+      <div class="hero-grid-overlay" aria-hidden="true"></div>
+
+      <!-- Floating Abstract 3D Neon Orbs & Shapes -->
+      <div class="orb orb-purple" data-parallax="18" aria-hidden="true"></div>
+      <div class="orb orb-blue" data-parallax="-14" aria-hidden="true"></div>
+      <div class="orb orb-cyan" data-parallax="22" aria-hidden="true"></div>
+      <div class="shape-3d-torus" data-parallax="-20" aria-hidden="true"></div>
+
+      <!-- Subtle Glowing Code Brackets (</>) Casting Color Through the Glass -->
+      <div class="code-brackets-layer" aria-hidden="true">
+        <span class="code-glyph code-glyph-left">&lt;/&gt;</span>
+        <span class="code-glyph code-glyph-right">&lt;/&gt;</span>
+      </div>
+      <span class="code-glyph code-glyph-center" aria-hidden="true">&lt;/&gt;</span>
+
+      <!-- Central Frosted Translucent Glass Card -->
+      <div class="hero-glass-card">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
+          Adrian Academics
+        </h1>
+        <p class="mt-2.5 sm:mt-3 text-sm sm:text-base md:text-lg font-medium tracking-wide text-slate-300/90">
+          Moving Forward Together
+        </p>
+      </div>
+    </header>
+
+    <!-- =======================================================================
+         MAIN CONTENT: WEB-BASED APPS GRID
+         ======================================================================= -->
+    <main class="flex-grow">
+      <!-- Section Header -->
+      <div class="flex items-center justify-between mb-6 sm:mb-8 pb-3 border-b border-white/10">
+        <div class="flex items-center gap-3">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.85)]"></span>
+          <h2 class="text-lg sm:text-xl font-semibold tracking-tight text-slate-100">
+            Web-Based Apps
+          </h2>
+        </div>
+        <span class="text-xs sm:text-sm font-mono text-slate-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+          &lt;web-apps /&gt;
+        </span>
+      </div>
+
+      <!-- Responsive Cards Grid -->
+      <div class="games-grid">
+
+        <!-- ===================================================================
+             1. RRL Similarity App
+             To add more apps later, copy this entire <a class="game-card">...</a>
+             block and update the href, cover graphic/image, and .game-title text.
+             =================================================================== -->
+        <a href="RRL.html" class="game-card group">
+          <div class="game-cover-wrapper">
+            <!-- Self-contained Turnitin-inspired Similarity Report SVG preview -->
+            <svg
+              viewBox="0 0 600 360"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="RRL Similarity App preview showing a document similarity report with 12 percent similarity index and highlighted passages"
+              class="game-cover"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              <defs>
+                <!-- Canvas background gradient -->
+                <linearGradient id="reportBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#0f172a" />
+                  <stop offset="55%" stop-color="#131c31" />
+                  <stop offset="100%" stop-color="#0d1526" />
+                </linearGradient>
+
+                <!-- Subtle top ambient glow -->
+                <radialGradient id="topGlow" cx="75%" cy="10%" r="60%">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.18" />
+                  <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.08" />
+                  <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+                </radialGradient>
+
+                <!-- Similarity badge gradient -->
+                <linearGradient id="badgeCrimson" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#e11d48" />
+                  <stop offset="100%" stop-color="#f43f5e" />
+                </linearGradient>
+
+                <!-- Soft card shadow -->
+                <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.45" />
+                </filter>
+              </defs>
+
+              <!-- Base Backdrop -->
+              <rect width="600" height="360" fill="url(#reportBg)" />
+              <rect width="600" height="360" fill="url(#topGlow)" />
+
+              <!-- Application Window Frame -->
+              <g filter="url(#softShadow)">
+                <rect x="24" y="20" width="552" height="320" rx="14" fill="#161b22" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
+              </g>
+
+              <!-- Top Toolbar -->
+              <path d="M24 34 C24 26.3 30.3 20 38 20 L562 20 C569.7 20 576 26.3 576 34 L576 60 L24 60 Z" fill="#1c2331" />
+              <line x1="24" y1="60" x2="576" y2="60" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+
+              <!-- Window Controls -->
+              <circle cx="44" cy="40" r="4.5" fill="#f43f5e" opacity="0.85" />
+              <circle cx="60" cy="40" r="4.5" fill="#f59e0b" opacity="0.85" />
+              <circle cx="76" cy="40" r="4.5" fill="#22c55e" opacity="0.85" />
+
+              <!-- Document Title in Toolbar -->
+              <text x="98" y="44" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.2">
+                RRL_Literature_Review_Draft.docx
+              </text>
+
+              <!-- Pill Similarity Index Badge -->
+              <rect x="404" y="28" width="156" height="24" rx="12" fill="url(#badgeCrimson)" />
+              <circle cx="418" cy="40" r="3.5" fill="#ffe4e6" />
+              <text x="428" y="44" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="10.5" font-weight="700">
+                12% Similarity Index
+              </text>
+
+              <!-- =========================================================
+                   LEFT PANE: DOCUMENT SHEET WITH HIGHLIGHTED PASSAGES
+                   ========================================================= -->
+              <rect x="38" y="74" width="352" height="252" rx="8" fill="#f8fafc" />
+
+              <!-- Document Header Block -->
+              <rect x="56" y="92" width="168" height="10" rx="4" fill="#1e293b" />
+              <rect x="56" y="108" width="112" height="6" rx="3" fill="#94a3b8" />
+              <line x1="56" y1="124" x2="372" y2="124" stroke="#e2e8f0" stroke-width="1" />
+
+              <!-- Paragraph 1: Crimson/Pink Match [1] -->
+              <rect x="56" y="136" width="310" height="7" rx="3" fill="#cbd5e1" />
+              <!-- Highlight 1 (Crimson/Pink) -->
+              <rect x="54" y="149" width="248" height="13" rx="3" fill="#fda4af" opacity="0.72" />
+              <rect x="56" y="152" width="242" height="7" rx="3" fill="#881337" opacity="0.72" />
+              <rect x="306" y="149" width="16" height="13" rx="3" fill="#e11d48" />
+              <text x="314" y="159" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="8.5" font-weight="700">1</text>
+              <rect x="56" y="168" width="276" height="7" rx="3" fill="#cbd5e1" />
+
+              <!-- Paragraph 2: Electric Blue Match [2] & Purple Match [3] -->
+              <rect x="56" y="188" width="120" height="7" rx="3" fill="#cbd5e1" />
+              <!-- Highlight 2 (Electric Blue) -->
+              <rect x="182" y="185" width="164" height="13" rx="3" fill="#93c5fd" opacity="0.78" />
+              <rect x="186" y="188" width="156" height="7" rx="3" fill="#1e3a8a" opacity="0.7" />
+              <rect x="350" y="185" width="16" height="13" rx="3" fill="#2563eb" />
+              <text x="358" y="195" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="8.5" font-weight="700">2</text>
+
+              <rect x="56" y="204" width="298" height="7" rx="3" fill="#cbd5e1" />
+
+              <!-- Highlight 3 (Purple) -->
+              <rect x="54" y="217" width="212" height="13" rx="3" fill="#d8b4fe" opacity="0.82" />
+              <rect x="58" y="220" width="204" height="7" rx="3" fill="#581c87" opacity="0.7" />
+              <rect x="270" y="217" width="16" height="13" rx="3" fill="#7c3aed" />
+              <text x="278" y="227" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="8.5" font-weight="700">3</text>
+              <rect x="292" y="220" width="76" height="7" rx="3" fill="#cbd5e1" />
+
+              <!-- Paragraph 3: Cyan Match [4] -->
+              <rect x="56" y="246" width="302" height="7" rx="3" fill="#cbd5e1" />
+              <rect x="56" y="262" width="84" height="7" rx="3" fill="#cbd5e1" />
+              <!-- Highlight 4 (Cyan) -->
+              <rect x="146" y="259" width="174" height="13" rx="3" fill="#67e8f9" opacity="0.72" />
+              <rect x="150" y="262" width="166" height="7" rx="3" fill="#164e63" opacity="0.72" />
+              <rect x="324" y="259" width="16" height="13" rx="3" fill="#06b6d4" />
+              <text x="332" y="269" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="8.5" font-weight="700">4</text>
+
+              <rect x="56" y="279" width="256" height="7" rx="3" fill="#cbd5e1" />
+              <rect x="56" y="295" width="196" height="7" rx="3" fill="#e2e8f0" />
+
+              <!-- =========================================================
+                   RIGHT PANE: MATCH OVERVIEW SIDEBAR
+                   ========================================================= -->
+              <rect x="404" y="74" width="158" height="252" rx="8" fill="#111827" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+
+              <!-- Sidebar Header -->
+              <text x="418" y="96" fill="#f8fafc" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700">
+                Match Overview
+              </text>
+
+              <!-- Circular Similarity Gauge -->
+              <circle cx="483" cy="134" r="24" fill="none" stroke="#1f2937" stroke-width="5" />
+              <!-- 12% arc approximation (circumference ~150.8, 18px dash) -->
+              <circle cx="483" cy="134" r="24" fill="none" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" stroke-dasharray="28 151" transform="rotate(-90 483 134)" />
+              <text x="483" y="138" text-anchor="middle" fill="#fda4af" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="800">
+                12%
+              </text>
+              <text x="483" y="171" text-anchor="middle" fill="#94a3b8" font-family="Inter, system-ui, sans-serif" font-size="8.5" font-weight="500">
+                PRIMARY SOURCES
+              </text>
+
+              <line x1="416" y1="181" x2="550" y2="181" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+
+              <!-- Source Row 1: Crimson 6% -->
+              <rect x="418" y="191" width="16" height="16" rx="4" fill="#e11d48" />
+              <text x="426" y="202" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700">1</text>
+              <rect x="441" y="193" width="68" height="5" rx="2.5" fill="#cbd5e1" opacity="0.85" />
+              <rect x="441" y="202" width="52" height="4" rx="2" fill="#f43f5e" />
+              <text x="548" y="202" text-anchor="end" fill="#fda4af" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="700">6%</text>
+
+              <!-- Source Row 2: Electric Blue 3% -->
+              <rect x="418" y="222" width="16" height="16" rx="4" fill="#2563eb" />
+              <text x="426" y="233" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700">2</text>
+              <rect x="441" y="224" width="60" height="5" rx="2.5" fill="#cbd5e1" opacity="0.8" />
+              <rect x="441" y="233" width="34" height="4" rx="2" fill="#3b82f6" />
+              <text x="548" y="233" text-anchor="end" fill="#93c5fd" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="700">3%</text>
+
+              <!-- Source Row 3: Purple 2% -->
+              <rect x="418" y="253" width="16" height="16" rx="4" fill="#7c3aed" />
+              <text x="426" y="264" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700">3</text>
+              <rect x="441" y="255" width="64" height="5" rx="2.5" fill="#cbd5e1" opacity="0.75" />
+              <rect x="441" y="264" width="24" height="4" rx="2" fill="#8b5cf6" />
+              <text x="548" y="264" text-anchor="end" fill="#d8b4fe" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="700">2%</text>
+
+              <!-- Source Row 4: Cyan 1% -->
+              <rect x="418" y="284" width="16" height="16" rx="4" fill="#06b6d4" />
+              <text x="426" y="295" text-anchor="middle" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700">4</text>
+              <rect x="441" y="286" width="54" height="5" rx="2.5" fill="#cbd5e1" opacity="0.7" />
+              <rect x="441" y="295" width="15" height="4" rx="2" fill="#22d3ee" />
+              <text x="548" y="295" text-anchor="end" fill="#67e8f9" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="700">1%</text>
+            </svg>
+
+            <!-- Subtle bottom vignette for seamless glass blending -->
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1117]/45 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 px-1.5 pb-1">
+            <span class="game-title">RRL Similarity App</span>
+            <!-- Subtle launch arrow indicator -->
+            <span
+              class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-slate-300 group-hover:bg-cyan-400/15 group-hover:border-cyan-400/40 group-hover:text-cyan-300 transition-colors"
+              aria-hidden="true"
+            >
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!--
+        =======================================================================
+        TEMPLATE FOR FUTURE WEB-BASED APP CARDS (Uncomment to use):
+        =======================================================================
+        <a href="your-app.html" class="game-card group">
+          <div class="game-cover-wrapper">
+            <img
+              src="your-app-cover.jpg"
+              alt="Web-Based App Preview"
+              class="game-cover"
+              onerror="this.onerror=null; this.src='https://placehold.co/600x400/161b22/a855f7?text=Web-Based+App';"
+            >
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d1117]/60 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+          <div class="flex items-center justify-between gap-3 px-1.5 pb-1">
+            <span class="game-title">Your Next Web-Based App</span>
+            <span class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-slate-300 group-hover:bg-cyan-400/15 group-hover:border-cyan-400/40 group-hover:text-cyan-300 transition-colors" aria-hidden="true">
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </span>
+          </div>
+        </a>
+        -->
+
+      </div>
+    </main>
+
+    <!-- Minimal Footer -->
+    <footer class="mt-16 pt-6 border-t border-white/10 text-center text-xs sm:text-sm text-slate-500">
+      <p>&copy; <span id="year"></span> Adrian Academics &middot; Moving Forward Together</p>
+    </footer>
+
   </div>
- </div>
+
+  <script>
+    /**
+     * Initialize dynamic footer year and subtle mouse-driven parallax
+     * on the hero banner's 3D neon orbs (desktop pointer devices only).
+     */
+    (function () {
+      try {
+        const yearEl = document.getElementById('year');
+        if (yearEl) {
+          yearEl.textContent = new Date().getFullYear();
+        }
+
+        const banner = document.getElementById('heroBanner');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+        if (!banner || prefersReducedMotion || !hasFinePointer) return;
+
+        const parallaxItems = banner.querySelectorAll('[data-parallax]');
+
+        banner.addEventListener('mousemove', (event) => {
+          const rect = banner.getBoundingClientRect();
+          const normX = (event.clientX - rect.left) / rect.width - 0.5;
+          const normY = (event.clientY - rect.top) / rect.height - 0.5;
+
+          parallaxItems.forEach((el) => {
+            const depth = parseFloat(el.getAttribute('data-parallax')) || 12;
+            const moveX = normX * depth;
+            const moveY = normY * depth;
+            el.style.marginLeft = `${moveX}px`;
+            el.style.marginTop = `${moveY}px`;
+          });
+        });
+
+        banner.addEventListener('mouseleave', () => {
+          parallaxItems.forEach((el) => {
+            el.style.marginLeft = '0px';
+            el.style.marginTop = '0px';
+          });
+        });
+      } catch (err) {
+        console.error('Initialization error:', err);
+      }
+    })();
+  </script>
 </body>
 </html>
