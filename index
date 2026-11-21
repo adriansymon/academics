@@ -85,8 +85,8 @@
   <h1>Teacher Cristine's Learning Hub</h1>
   
   <div class="games-grid">
-   <!-- 1. Bingo -->
-   <a href="bingo.html" class="game-card">
+   <!-- 1. RRL -->
+   <a href="RRL.html" class="game-card">
     <img src="bingo-cover.jpg" alt="Bingo Speaking Task" class="game-cover">
     <span class="game-title">bingo speaking task</span>
    </a>
