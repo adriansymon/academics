@@ -300,7 +300,7 @@
                     <div class="flex items-center gap-2.5">
                         <h1 class="text-xl font-extrabold tracking-tight text-slate-900">Switchback</h1>
                         <span class="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100/90 text-sky-800 border border-sky-300/60">
-                            Stylometric Engine v5.1
+                            Academic Edition
                         </span>
                     </div>
                     <p class="text-xs text-slate-600 font-medium">Privacy-First Lexical &amp; 7-Axis Stylometric Thesis Detector</p>
@@ -605,37 +605,40 @@
                 </div>
 
                 <!-- Semi-Circular SVG Gauge & Score Readout -->
-                <div class="glass-blue-tint rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-5">
-                    <div class="relative w-36 h-24 flex items-center justify-center shrink-0">
-                        <svg class="w-36 h-24 overflow-visible" viewBox="0 0 120 75">
-                            <!-- Background Track Arc -->
-                            <path d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="11" stroke-linecap="round"></path>
-                            <!-- Dynamic Value Arc (Total length ~150.8) -->
-                            <path id="scoreGaugeArc" class="gauge-arc" d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="#0284c7" stroke-width="11" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8"></path>
-                        </svg>
-                        <div class="absolute bottom-1 flex flex-col items-center">
-                            <span id="aiScoreValue" class="text-2xl font-extrabold text-slate-900 leading-none">0%</span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">AI Likelihood</span>
+                <div class="glass-blue-tint rounded-2xl p-4 flex flex-col gap-4">
+                    <div class="flex flex-col sm:flex-row items-center gap-4">
+                        <div class="relative w-36 h-24 flex items-center justify-center shrink-0">
+                            <svg class="w-36 h-24 overflow-visible" viewBox="0 0 120 75">
+                                <!-- Background Track Arc -->
+                                <path d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="11" stroke-linecap="round"></path>
+                                <!-- Dynamic Value Arc (Total length ~150.8) -->
+                                <path id="scoreGaugeArc" class="gauge-arc" d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="#0284c7" stroke-width="11" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8"></path>
+                            </svg>
+                            <div class="absolute bottom-1 flex flex-col items-center">
+                                <span id="aiScoreValue" class="text-2xl font-extrabold text-slate-900 leading-none">0%</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">AI Likelihood</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 min-w-0 text-center sm:text-left">
+                            <p id="scoreExplanationText" class="text-xs text-slate-700 leading-relaxed font-medium">
+                                Analyzing lexical clichés and 7-axis stylometric patterns across your thesis draft...
+                            </p>
                         </div>
                     </div>
 
-                    <div class="flex-1 space-y-2 text-center sm:text-left">
-                        <p id="scoreExplanationText" class="text-xs text-slate-700 leading-relaxed font-medium">
-                            Analyzing lexical clichés and 7-axis stylometric patterns across your thesis draft...
-                        </p>
-                        <div class="grid grid-cols-3 gap-2 pt-1 text-left">
-                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
-                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Clichés</span>
-                                <span id="clicheDensityValue" class="text-xs font-extrabold text-slate-900">0.0%</span>
-                            </div>
-                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
-                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Stylometric</span>
-                                <span id="stylometricScoreLabel" class="text-xs font-extrabold text-slate-900">0 / 100</span>
-                            </div>
-                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
-                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Burstiness</span>
-                                <span id="burstinessValue" class="text-[11px] font-extrabold text-slate-900 truncate block">N/A</span>
-                            </div>
+                    <div class="grid grid-cols-3 gap-2.5 pt-3 border-t border-white/50 text-left">
+                        <div class="bg-white/65 rounded-xl px-3 py-2 border border-white/75 min-w-0">
+                            <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Clichés</span>
+                            <span id="clicheDensityValue" class="block text-sm font-extrabold text-slate-900 mt-0.5">0.0%</span>
+                        </div>
+                        <div class="bg-white/65 rounded-xl px-3 py-2 border border-white/75 min-w-0">
+                            <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Stylometric</span>
+                            <span id="stylometricScoreLabel" class="block text-sm font-extrabold text-slate-900 mt-0.5">0 / 100</span>
+                        </div>
+                        <div class="bg-white/65 rounded-xl px-3 py-2 border border-white/75 min-w-0">
+                            <span class="block text-[10px] text-slate-500 font-semibold uppercase tracking-wide">Burstiness</span>
+                            <span id="burstinessValue" class="block text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 break-words leading-tight">N/A</span>
                         </div>
                     </div>
                 </div>
@@ -1704,9 +1707,9 @@ Moreover, it is worth noting that green industrial subsidies represent a transfo
 
                 // Lower CV means more uniform (AI-like) sentence cadence
                 uniformityAxisScore = Math.max(0, Math.min(100, Math.round((1 - Math.min(cv / 0.55, 1)) * 100)));
-                if (cv < 0.22) burstinessLabel = 'Very Low (Uniform)';
+                if (cv < 0.22) burstinessLabel = 'Low (Uniform)';
                 else if (cv < 0.36) burstinessLabel = 'Moderate';
-                else burstinessLabel = 'High (Human-like)';
+                else burstinessLabel = 'High (Human)';
             } else if (sentenceCount > 0 && wordCount >= 18) {
                 uniformityAxisScore = avgSentenceLength >= 22 ? 55 : 25;
                 burstinessLabel = 'Short Sample';
