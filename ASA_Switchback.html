@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switchback | Academic AI & Thesis Cliché Detector</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Merriweather for Academic Editor contrast -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Newsreader', 'Georgia', 'serif']
+                    },
+                    colors: {
+                        academic: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            300: '#7cc8fb',
+                            400: '#36aaf5',
+                            500: '#0c8ee6',
+                            600: '#0070c4',
+                            700: '#01599f',
+                            800: '#064b83',
+                            900: '#0b406d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Page Background & Vibrant Multi-Color Mesh Underneath */
+        body {
+            background-color: #ffffff;
+            color: #0f172a;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Vibrant Multi-Color Gradient Layer underneath containers */
+        .gradient-mesh-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(at 12% 18%, rgba(56, 189, 248, 0.42) 0px, transparent 50%),
+                radial-gradient(at 85% 12%, rgba(99, 102, 241, 0.35) 0px, transparent 48%),
+                radial-gradient(at 48% 52%, rgba(14, 165, 233, 0.28) 0px, transparent 55%),
+                radial-gradient(at 88% 82%, rgba(236, 72, 153, 0.26) 0px, transparent 50%),
+                radial-gradient(at 15% 88%, rgba(45, 212, 191, 0.35) 0px, transparent 50%),
+                linear-gradient(135deg, #ffffff 0%, #e0f2fe 45%, #dbeafe 75%, #f0f9ff 100%);
+        }
+
+        /* Floating animated color orbs to enhance glass refraction */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 9999px;
+            filter: blur(65px);
+            z-index: -1;
+            opacity: 0.65;
+            pointer-events: none;
+            animation: floatOrb 18s infinite alternate ease-in-out;
+        }
+        .orb-1 {
+            width: 420px;
+            height: 420px;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            top: 4%;
+            left: 6%;
+        }
+        .orb-2 {
+            width: 480px;
+            height: 480px;
+            background: linear-gradient(135deg, #60a5fa, #c084fc, #f472b6);
+            bottom: 6%;
+            right: 5%;
+            animation-delay: -6s;
+        }
+        .orb-3 {
+            width: 340px;
+            height: 340px;
+            background: linear-gradient(135deg, #2dd4bf, #38bdf8);
+            top: 42%;
+            left: 44%;
+            animation-delay: -11s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(25px, -20px) scale(1.06); }
+            100% { transform: translate(-20px, 25px) scale(0.96); }
+        }
+
+        /* STRICT GLASSMORPHISM SPECIFICATION */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 32px -8px rgba(14, 116, 144, 0.12);
+        }
+
+        /* Light Blue Tinted Glass Sub-containers */
+        .glass-blue-tint {
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.48), rgba(186, 230, 253, 0.24));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 20px -4px rgba(2, 132, 199, 0.08);
+        }
+
+        /* Document Editor Surface */
+        .document-surface {
+            background: rgba(255, 255, 255, 0.68);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 4px 20px rgba(15, 23, 42, 0.04);
+        }
+
+        /* Highlighted AI Cliché Spans */
+        .ai-flag {
+            display: inline;
+            padding: 2px 5px;
+            margin: 0 1px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .ai-flag:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.96);
+        }
+
+        /* Category 1: Overused AI Verbs & Action Clichés (Sky/Blue Alert) */
+        .flag-verb {
+            background-color: rgba(14, 165, 233, 0.18);
+            border-bottom: 2px solid #0284c7;
+            color: #0369a1;
+        }
+        .flag-verb.active-flag {
+            background-color: #0284c7;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+        }
+
+        /* Category 2: Florid Metaphors & Abstract Nouns (Purple/Indigo Alert) */
+        .flag-noun {
+            background-color: rgba(139, 92, 246, 0.18);
+            border-bottom: 2px solid #7c3aed;
+            color: #5b21b6;
+        }
+        .flag-noun.active-flag {
+            background-color: #7c3aed;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
+        }
+
+        /* Category 3: Formulaic Transitions & Hedging (Amber/Rose Alert) */
+        .flag-transition {
+            background-color: rgba(245, 158, 11, 0.22);
+            border-bottom: 2px solid #d97706;
+            color: #92400e;
+        }
+        .flag-transition.active-flag {
+            background-color: #d97706;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25);
+        }
+
+        /* Category 4: Hyperbolic Adjectives (Rose Alert) */
+        .flag-adjective {
+            background-color: rgba(244, 63, 94, 0.16);
+            border-bottom: 2px solid #e11d48;
+            color: #9f1239;
+        }
+        .flag-adjective.active-flag {
+            background-color: #e11d48;
+            color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.25);
+        }
+
+        /* Category 5: Stylometric Structural Patterns (Teal/Emerald Dashed Underline) */
+        .flag-structural {
+            background-color: rgba(13, 148, 136, 0.16);
+            border-bottom: 2px dashed #0d9488;
+            color: #115e59;
+        }
+        .flag-structural.active-flag {
+            background-color: #0d9488;
+            color: #ffffff;
+            border-bottom-style: solid;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.28);
+        }
+
+        /* Replaced Humanized Highlight Flash */
+        @keyframes replacementPulse {
+            0% { background-color: rgba(16, 185, 129, 0.45); }
+            100% { background-color: transparent; }
+        }
+        .humanized-flash {
+            animation: replacementPulse 2.2s ease-out forwards;
+            border-radius: 4px;
+            padding: 1px 3px;
+            color: #065f46;
+            font-weight: 500;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.4);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.7);
+        }
+
+        /* Gauge SVG transition */
+        .gauge-arc {
+            transition: stroke-dashoffset 0.75s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.4s ease;
+        }
+
+        /* Offline Fallback Layout Rules (Ensures usability even if Tailwind CDN is unreachable offline) */
+        .offline-fallback-active main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        @media (min-width: 1024px) {
+            .offline-fallback-active main {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+        .offline-fallback-active .hidden {
+            display: none !important;
+        }
+        .offline-fallback-active button, .offline-fallback-active select, .offline-fallback-active input {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(14, 116, 144, 0.3);
+            cursor: pointer;
+            margin: 2px;
+        }
+        .offline-fallback-active textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 16px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-sky-200 selection:text-sky-900 flex flex-col min-h-screen">
+
+    <!-- Vibrant Multi-Color Mesh Background Layer -->
+    <div class="gradient-mesh-bg"></div>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <!-- Top Navigation / Header Bar -->
+    <header class="sticky top-0 z-30 px-4 sm:px-8 pt-4 pb-2">
+        <div class="max-w-7xl mx-auto glass-container rounded-2xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 flex items-center justify-center text-white shadow-md shadow-sky-500/20 border border-white/40">
+                    <i data-lucide="waypoints" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2.5">
+                        <h1 class="text-xl font-extrabold tracking-tight text-slate-900">Switchback</h1>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100/90 text-sky-800 border border-sky-300/60">
+                            Stylometric Engine v5.1
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-600 font-medium">Privacy-First Lexical &amp; 7-Axis Stylometric Thesis Detector</p>
+                </div>
+            </div>
+
+            <!-- Sample Preset Selector & Quick Actions -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <div class="relative">
+                    <select id="sampleSelect" aria-label="Select Sample Thesis Excerpt" class="glass-blue-tint text-xs sm:text-sm font-medium text-slate-800 rounded-xl pl-3.5 pr-8 py-2 appearance-none cursor-pointer hover:border-sky-400 transition focus:outline-none focus:ring-2 focus:ring-sky-400/50">
+                        <option value="sociology">Sample 1: Graduate Thesis (Cliché + Structural AI)</option>
+                        <option value="stealth_ai">Sample 2: "Stealth AI" Draft (Zero Clichés, High Stylometrics)</option>
+                        <option value="biotech">Sample 3: Doctoral Dissertation (Bioethics & AI)</option>
+                        <option value="economics">Sample 4: Undergrad Capstone (Macroeconomics)</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+
+                <button id="loadSampleBtn" class="glass-blue-tint hover:bg-sky-100/60 text-sky-900 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95">
+                    <i data-lucide="book-open-check" class="w-4 h-4 text-sky-600"></i>
+                    <span>Load Sample</span>
+                </button>
+
+                <input id="fileUploadInput" type="file" accept=".txt,.md,.tex" class="hidden" aria-label="Upload thesis text file">
+                <button id="uploadFileBtn" class="glass-blue-tint hover:bg-sky-100/60 text-sky-950 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95" title="Upload a .txt, .md, or .tex thesis chapter to scan">
+                    <i data-lucide="upload" class="w-4 h-4 text-sky-600"></i>
+                    <span class="hidden sm:inline">Upload File</span>
+                </button>
+
+                <button id="toggleCustomDictBtn" class="glass-blue-tint hover:bg-sky-100/60 text-sky-950 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95" title="Add custom AI trigger phrases saved to your browser">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-sky-600"></i>
+                    <span class="hidden sm:inline">Custom Triggers</span>
+                </button>
+
+                <button id="runDiagnosticsBtn" class="glass-blue-tint hover:bg-emerald-100/70 text-emerald-950 border border-emerald-400/50 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95" title="Run automated offline self-test to verify lexical & stylometric detection">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Verify Engine</span>
+                </button>
+
+                <button id="copyTextBtn" class="glass-container hover:bg-white/40 text-slate-700 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95" title="Copy current humanized document">
+                    <i data-lucide="copy" class="w-4 h-4 text-slate-600"></i>
+                    <span class="hidden sm:inline">Copy Text</span>
+                </button>
+
+                <button id="clearTextBtn" class="glass-container hover:bg-rose-50/50 text-rose-700 text-xs sm:text-sm font-medium px-3 py-2 rounded-xl flex items-center gap-1.5 transition active:scale-95" title="Clear document">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Collapsible Custom Trigger Phrase Manager (Saved in localStorage) -->
+        <div id="customDictDrawer" class="hidden max-w-7xl mx-auto mt-2 glass-container rounded-2xl p-4 transition-all">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-sky-950 flex items-center gap-1.5">
+                        <i data-lucide="bookmark-plus" class="w-4 h-4 text-sky-600"></i>
+                        <span>Custom Offline Trigger Dictionary (Saved to Browser)</span>
+                    </h3>
+                    <p class="text-xs text-slate-600">Add any specific word or multi-word phrase you want Switchback to flag as AI in your downloaded file.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                    <input id="customTriggerPhraseInput" type="text" placeholder="e.g., plays a vital role" class="text-xs rounded-xl px-3 py-2 bg-white/80 border border-slate-300/80 focus:outline-none focus:ring-2 focus:ring-sky-400 text-slate-800 w-44">
+                    <input id="customTriggerAltInput" type="text" placeholder="Alternatives (comma-separated)" class="text-xs rounded-xl px-3 py-2 bg-white/80 border border-slate-300/80 focus:outline-none focus:ring-2 focus:ring-sky-400 text-slate-800 w-52">
+                    <button id="addCustomTriggerBtn" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shrink-0">
+                        + Add Rule
+                    </button>
+                </div>
+            </div>
+            <div id="customTriggersList" class="flex flex-wrap items-center gap-2 mt-3 pt-2.5 border-t border-slate-300/40 text-xs">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Collapsible Offline Diagnostic & Calibration Report Drawer -->
+        <div id="diagnosticsDrawer" class="hidden max-w-7xl mx-auto mt-2 glass-container rounded-2xl p-4 border border-emerald-400/60 transition-all">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-3 border-b border-slate-300/50">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-950">
+                        Local & Offline Self-Diagnostic Verification Suite
+                    </h3>
+                </div>
+                <button id="closeDiagnosticsBtn" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-2 py-0.5 rounded-lg">
+                    Close ×
+                </button>
+            </div>
+            <div id="diagnosticsResultsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <!-- Populated dynamically by Verify Engine -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT COLUMN: Document Analysis & Interactive Review Studio (7 Cols) -->
+        <section class="lg:col-span-7 flex flex-col gap-5">
+            
+            <!-- Primary Glassmorphism Editor Card -->
+            <div class="glass-container rounded-3xl p-5 sm:p-6 flex flex-col gap-4 relative">
+                
+                <!-- Mode Switcher & Status Header -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-300/40">
+                    <div class="flex items-center gap-1.5 p-1 rounded-xl glass-blue-tint">
+                        <button id="modeInteractiveBtn" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 bg-white text-sky-900 shadow-sm">
+                            <i data-lucide="scan-Search" class="w-4 h-4 text-sky-600"></i>
+                            <span>Interactive Scan View</span>
+                            <span id="badgeFlagCount" class="ml-1 px-1.5 py-0.2 bg-sky-100 text-sky-800 rounded-md text-xs font-bold">0</span>
+                        </button>
+                        <button id="modeRawEditBtn" class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
+                            <i data-lucide="pen-line" class="w-4 h-4"></i>
+                            <span>Raw Paste / Edit</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-xs text-slate-600 font-medium">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="scanStatusLabel">Client-Side 7-Axis Scanner Active (100% Private)</span>
+                    </div>
+                </div>
+
+                <!-- Category Filter Pills & Legend -->
+                <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+                    <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                        <span class="text-slate-500 font-medium mr-1">Filter Signals:</span>
+                        <button data-filter="all" class="category-pill active px-2.5 py-1 rounded-lg font-semibold bg-slate-800 text-white transition">
+                            All Signals
+                        </button>
+                        <button data-filter="structural" class="category-pill px-2.5 py-1 rounded-lg font-medium bg-teal-500/15 text-teal-900 border border-teal-400/40 hover:bg-teal-500/25 transition flex items-center gap-1.5" title="Participial -ing tails, passive hedging, nominalization clusters, and correlative syntax">
+                            <span class="w-2 h-2 rounded-full bg-teal-600"></span> Structural Heuristics
+                        </button>
+                        <button data-filter="verb" class="category-pill px-2.5 py-1 rounded-lg font-medium bg-sky-500/15 text-sky-900 border border-sky-400/40 hover:bg-sky-500/25 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-sky-600"></span> AI Verbs
+                        </button>
+                        <button data-filter="noun" class="category-pill px-2.5 py-1 rounded-lg font-medium bg-violet-500/15 text-violet-900 border border-violet-400/40 hover:bg-violet-500/25 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-violet-600"></span> Florid Nouns
+                        </button>
+                        <button data-filter="transition" class="category-pill px-2.5 py-1 rounded-lg font-medium bg-amber-500/15 text-amber-900 border border-amber-400/40 hover:bg-amber-500/25 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-600"></span> Transitions & Phrases
+                        </button>
+                        <button data-filter="adjective" class="category-pill px-2.5 py-1 rounded-lg font-medium bg-rose-500/15 text-rose-900 border border-rose-400/40 hover:bg-rose-500/25 transition flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-rose-600"></span> Hyperbolic Adj.
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Helper Instruction Banner -->
+                <div id="interactiveBanner" class="glass-blue-tint rounded-xl px-4 py-2.5 flex items-center justify-between gap-3 text-xs text-sky-950">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-sky-600 shrink-0"></i>
+                        <span><strong>Click any highlighted phrase</strong> in your thesis excerpt below to inspect why AI detectors flag it and swap in a scholarly alternative.</span>
+                    </div>
+                    <button id="autoHumanizeBtn" class="shrink-0 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5 active:scale-95" title="Automatically replace all detected clichés with top academic alternatives">
+                        <i data-lucide="wand-sparkles" class="w-3.5 h-3.5"></i>
+                        <span>Auto-Humanize All</span>
+                    </button>
+                </div>
+
+                <!-- INTERACTIVE HIGHLIGHT DOCUMENT VIEW -->
+                <div id="interactiveViewContainer" class="document-surface rounded-2xl p-5 sm:p-7 min-h-[420px] max-h-[600px] overflow-y-auto font-serif text-base sm:text-[17px] leading-relaxed text-slate-800 whitespace-pre-wrap select-text">
+                    <!-- Dynamically populated with highlighted spans -->
+                </div>
+
+                <!-- RAW TEXTAREA INPUT VIEW (Hidden when in Interactive Mode) -->
+                <div id="rawEditContainer" class="hidden flex-col gap-3">
+                    <textarea id="thesisInput" rows="16" placeholder="Paste your undergraduate essay, master's thesis, literature review, or dissertation chapter here to scan for LLM watermarks and formulaic phrasing..." class="document-surface w-full rounded-2xl p-5 sm:p-6 font-serif text-base sm:text-[17px] leading-relaxed text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/50 resize-y min-h-[420px]"></textarea>
+                    <div class="flex justify-end">
+                        <button id="applyRawChangesBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md shadow-sky-600/20 flex items-center gap-2 transition">
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                            <span>Scan & Return to Interactive Highlights</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bottom Document Metrics Bar -->
+                <div class="pt-2 border-t border-slate-300/40 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 font-medium">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <span class="flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-sky-600"></i>
+                            Words: <strong id="metricWordCount" class="text-slate-900">0</strong>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <i data-lucide="align-left" class="w-3.5 h-3.5 text-sky-600"></i>
+                            Sentences: <strong id="metricSentenceCount" class="text-slate-900">0</strong>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <i data-lucide="activity" class="w-3.5 h-3.5 text-sky-600"></i>
+                            Avg. Sentence Length: <strong id="metricAvgSentence" class="text-slate-900">0 words</strong>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="humanizedCounterBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-100/80 text-emerald-800 border border-emerald-300 font-semibold hidden">
+                            0 Revisions Applied
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: AI Probability Gauge, Personalized Review System & Cliché Breakdown (5 Cols) -->
+        <aside class="lg:col-span-5 flex flex-col gap-5">
+
+            <!-- CARD 1: Personalized Review & Replacement Inspector (Active on Click) -->
+            <div id="reviewInspectorCard" class="glass-container rounded-3xl p-5 sm:p-6 border-2 border-sky-400/40 transition-all duration-300 relative overflow-hidden">
+                <div class="flex items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-700">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-sky-950">Personalized Review System</h2>
+                            <p class="text-[11px] text-slate-600">Context-aware scholarly replacement engine</p>
+                        </div>
+                    </div>
+                    <div id="inspectorNavControls" class="hidden items-center gap-1">
+                        <button id="prevFlagBtn" class="p-1.5 rounded-lg glass-blue-tint hover:bg-sky-200/50 text-slate-700 transition" title="Previous Flagged Phrase">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <span id="inspectorIndexIndicator" class="text-xs font-semibold text-slate-700 px-1.5">1 / 1</span>
+                        <button id="nextFlagBtn" class="p-1.5 rounded-lg glass-blue-tint hover:bg-sky-200/50 text-slate-700 transition" title="Next Flagged Phrase">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empty State (when no flag is selected yet) -->
+                <div id="inspectorEmptyState" class="glass-blue-tint rounded-2xl p-5 text-center my-1">
+                    <div class="w-10 h-10 rounded-full bg-sky-500/15 text-sky-700 flex items-center justify-center mx-auto mb-2.5">
+                        <i data-lucide="Lightbulb" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800 mb-1">Select a Highlighted Cliché to Humanize</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                        Click any color-coded word or phrase in the document editor, or use the button below to step through each detected AI pattern one by one.
+                    </p>
+                    <button id="inspectFirstFlagBtn" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition inline-flex items-center gap-1.5">
+                        <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                        <span>Inspect First Flagged Cliché</span>
+                    </button>
+                </div>
+
+                <!-- Active Flag Inspection Content -->
+                <div id="inspectorActiveContent" class="hidden flex-col gap-3.5">
+                    <div class="glass-blue-tint rounded-2xl p-4">
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <span id="activeFlagCategoryBadge" class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-sky-200/80 text-sky-900">
+                                Overused Verb
+                            </span>
+                            <span id="activeFlagSeverity" class="text-xs font-semibold text-rose-700 flex items-center gap-1">
+                                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> High AI Signal
+                            </span>
+                        </div>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <span class="text-xs text-slate-500">Flagged Text:</span>
+                            <span id="activeFlagPhrase" class="text-base font-bold text-slate-900 font-serif bg-white/80 px-2.5 py-0.5 rounded-lg border border-slate-300/60">
+                                "delve"
+                            </span>
+                        </div>
+                        <p id="activeFlagReason" class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+                            Over-represented in RLHF-tuned models by over 1,400% compared to pre-2022 human academic corpora.
+                        </p>
+                    </div>
+
+                    <!-- Humanized Alternatives Selection -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                            Click an Authentic Academic Alternative to Replace:
+                        </label>
+                        <div id="alternativesGrid" class="grid grid-cols-2 gap-2">
+                            <!-- Dynamically populated buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Custom Manual Input Option -->
+                    <div class="flex items-center gap-2 pt-1">
+                        <input id="customReplacementInput" type="text" placeholder="Or type your own phrasing..." class="flex-1 text-xs rounded-xl px-3 py-2 bg-white/75 border border-slate-300/70 focus:outline-none focus:ring-2 focus:ring-sky-400 text-slate-800">
+                        <button id="applyCustomReplacementBtn" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shrink-0">
+                            Apply
+                        </button>
+                    </div>
+
+                    <!-- Dismiss / Ignore Flag Action -->
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-300/40 text-xs">
+                        <button id="ignoreSingleFlagBtn" class="text-slate-600 hover:text-slate-900 font-medium flex items-center gap-1 transition">
+                            <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+                            <span>Ignore this instance</span>
+                        </button>
+                        <span class="text-[11px] text-slate-500">Matches case & punctuation automatically</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 2: AI Probability Score & Burstiness Metrics -->
+            <div class="glass-container rounded-3xl p-5 sm:p-6 flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">AI Probability Score</h2>
+                        <p class="text-xs text-slate-600">Estimated likelihood of LLM stylistic watermarking</p>
+                    </div>
+                    <span id="riskVerdictBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                        Moderate Signal
+                    </span>
+                </div>
+
+                <!-- Semi-Circular SVG Gauge & Score Readout -->
+                <div class="glass-blue-tint rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-5">
+                    <div class="relative w-36 h-24 flex items-center justify-center shrink-0">
+                        <svg class="w-36 h-24 overflow-visible" viewBox="0 0 120 75">
+                            <!-- Background Track Arc -->
+                            <path d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="rgba(148, 163, 184, 0.35)" stroke-width="11" stroke-linecap="round"></path>
+                            <!-- Dynamic Value Arc (Total length ~150.8) -->
+                            <path id="scoreGaugeArc" class="gauge-arc" d="M 12 65 A 48 48 0 0 1 108 65" fill="none" stroke="#0284c7" stroke-width="11" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8"></path>
+                        </svg>
+                        <div class="absolute bottom-1 flex flex-col items-center">
+                            <span id="aiScoreValue" class="text-2xl font-extrabold text-slate-900 leading-none">0%</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">AI Likelihood</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 space-y-2 text-center sm:text-left">
+                        <p id="scoreExplanationText" class="text-xs text-slate-700 leading-relaxed font-medium">
+                            Analyzing lexical clichés and 7-axis stylometric patterns across your thesis draft...
+                        </p>
+                        <div class="grid grid-cols-3 gap-2 pt-1 text-left">
+                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
+                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Clichés</span>
+                                <span id="clicheDensityValue" class="text-xs font-extrabold text-slate-900">0.0%</span>
+                            </div>
+                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
+                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Stylometric</span>
+                                <span id="stylometricScoreLabel" class="text-xs font-extrabold text-slate-900">0 / 100</span>
+                            </div>
+                            <div class="bg-white/60 rounded-lg px-2.5 py-1.5 border border-white/70">
+                                <span class="block text-[10px] text-slate-500 font-semibold uppercase">Burstiness</span>
+                                <span id="burstinessValue" class="text-[11px] font-extrabold text-slate-900 truncate block">N/A</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3-Tier Document Composition Bar (GPTZero / ZeroGPT-style Classification) -->
+                <div class="glass-blue-tint rounded-2xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-[11px] font-bold">
+                        <span class="text-slate-700 uppercase tracking-wider">Sentence-Level Classification</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-rose-700">AI: <strong id="compAiPct">0%</strong></span>
+                            <span class="text-amber-700">Mixed: <strong id="compMixedPct">0%</strong></span>
+                            <span class="text-emerald-700">Human: <strong id="compHumanPct">100%</strong></span>
+                        </div>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-200/80 rounded-full overflow-hidden flex">
+                        <div id="compAiBar" class="h-full bg-rose-500 transition-all duration-500" style="width: 0%"></div>
+                        <div id="compMixedBar" class="h-full bg-amber-400 transition-all duration-500" style="width: 0%"></div>
+                        <div id="compHumanBar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- 7-Axis Broad Stylometric Heuristics Breakdown (Works with ZERO clichés) -->
+                <div class="glass-blue-tint rounded-2xl p-4 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-950 flex items-center gap-1.5">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5 text-teal-700"></i>
+                            <span>Broad Stylometric Engine (Non-Cliché Signals)</span>
+                        </span>
+                        <span id="heuristicSummaryTag" class="text-[11px] font-semibold text-teal-800">7 Structural Axes</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs pt-1">
+                        <!-- Axis 1: Participial Tail Clauses (-ing endings) -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">1. Participial Tail Clauses (<code>, -ing...</code> endings)</span>
+                                <span id="heurParticipialLabel" class="font-bold text-slate-900">0 detected</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurParticipialBar" class="h-full bg-teal-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 2: Sentence Length Uniformity / Low Burstiness -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">2. Sentence Cadence Uniformity (Low Burstiness)</span>
+                                <span id="heurUniformityLabel" class="font-bold text-slate-900">0%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurUniformityBar" class="h-full bg-sky-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 3: Nominalization & Syllabic Density (-tion, -ment, -ity) -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">3. Abstract Nominalization Density (<code>-tion/-ity/-ment</code>)</span>
+                                <span id="heurNominalLabel" class="font-bold text-slate-900">0.0%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurNominalBar" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 4: Impersonal Hedging & Copula Framing -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">4. Impersonal Hedging & Passive Copulas</span>
+                                <span id="heurHedgingLabel" class="font-bold text-slate-900">0 detected</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurHedgingBar" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 5: Em-Dash, Colon & Correlative ("not only...but also") Cadence -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">5. Em-Dash / Colon / Correlative Cadence</span>
+                                <span id="heurPunctLabel" class="font-bold text-slate-900">0 markers</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurPunctBar" class="h-full bg-rose-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 6: Lexical Diversity & Vocabulary Flatness -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">6. Vocabulary Predictability & Repetition</span>
+                                <span id="heurEntropyLabel" class="font-bold text-slate-900">0%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurEntropyBar" class="h-full bg-violet-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Axis 7: Rule-of-Three Triads & Formulaic Openers -->
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-0.5">
+                                <span class="text-slate-700 font-medium">7. Rule-of-Three Triads & Formulaic Openers</span>
+                                <span id="heurTriadLabel" class="font-bold text-slate-900">0 patterns</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                                <div id="heurTriadBar" class="h-full bg-cyan-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-metrics Breakdown Bars -->
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="glass-blue-tint rounded-xl p-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-600 font-medium">Total AI Signals</span>
+                            <span id="statFlagCount" class="font-bold text-slate-900 text-sm">0</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                            <div id="barFlagIntensity" class="h-full bg-sky-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-blue-tint rounded-xl p-3">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-slate-600 font-medium">Authentic Voice Index</span>
+                            <span id="statAuthenticityScore" class="font-bold text-emerald-700 text-sm">100%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden">
+                            <div id="barAuthenticity" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 3: Detected Cliché Frequency Breakdown List -->
+            <div class="glass-container rounded-3xl p-5 sm:p-6 flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+                        <i data-lucide="list-filter" class="w-4 h-4 text-sky-600"></i>
+                        <span>Detected Clichés in Document</span>
+                    </h2>
+                    <span id="uniquePatternsCount" class="text-xs font-semibold text-slate-500">0 patterns</span>
+                </div>
+
+                <div id="detectedListContainer" class="max-h-56 overflow-y-auto space-y-2 pr-1">
+                    <!-- Populated dynamically with clickable chips -->
+                </div>
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- Notification Toast for Clipboard / Actions -->
+    <div id="toastNotification" class="fixed bottom-16 right-6 z-50 glass-container bg-slate-900/90 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-semibold pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toastMessage">Action completed</span>
+    </div>
+
+    <!-- Footer with Mandatory Glassmorphism Highlight -->
+    <footer class="mt-auto px-4 sm:px-8 py-5">
+        <div class="max-w-7xl mx-auto glass-container rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-700">
+            <div class="flex items-center gap-2 font-medium">
+                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                <span>Switchback Academic Integrity & Stylistic Refinement Suite</span>
+            </div>
+            <div class="glass-blue-tint px-4 py-1.5 rounded-xl font-bold text-sky-950 tracking-wide shadow-sm">
+                Created by Adrian Soco Analytics
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Logic & Comprehensive Academic AI Cliché Lexicon -->
+    <script>
+        // ============================================================================
+        // 1. EXPANDED ACADEMIC AI CLICHÉ LEXICON (65+ WORDS & MULTI-WORD PHRASES)
+        // ============================================================================
+        const BASE_AI_CLICHE_DICTIONARY = [
+            // --- Multi-Word Academic AI Phrases (transition / phrase) ---
+            {
+                id: 'important_to_note',
+                phrase: 'it is important to note',
+                regex: /\b(it is (?:important|worth|crucial|essential|interesting) to note(?: that)?|it is worth noting(?: that)?)\b/gi,
+                category: 'transition',
+                categoryLabel: 'AI Throat-Clearing Phrase',
+                weight: 9,
+                reason: 'Classic LLM hedging opener used to introduce caveats mechanically without integrating them into the argument.',
+                alternatives: ['notably,', 'significantly,', 'specifically,', 'in particular,', 'crucially,']
+            },
+            {
+                id: 'plays_crucial_role',
+                phrase: 'plays a crucial role',
+                regex: /\b(plays? a (?:crucial|pivotal|vital|key|paramount|significant|central|fundamental) role in)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 9,
+                reason: 'One of the most frequent multi-word clichés in LLM academic essays; replaces specific causal mechanisms with generic importance.',
+                alternatives: ['directly shapes', 'governs', 'drives', 'determines', 'regulates']
+            },
+            {
+                id: 'shed_light_on',
+                phrase: 'shed light on',
+                regex: /\b(shed(?:s|ding)? (?:new )?light on)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 8,
+                reason: 'Overused metaphorical idiom in AI-generated abstracts and literature reviews.',
+                alternatives: ['clarify', 'explain', 'reveal', 'account for', 'document']
+            },
+            {
+                id: 'pave_the_way',
+                phrase: 'pave the way',
+                regex: /\b(pave(?:s|d|ing)? the way for)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 8,
+                reason: 'Promotional cliché frequently generated in AI conclusion paragraphs to project future implications.',
+                alternatives: ['enable', 'precede', 'facilitate', 'prepare for', 'establish foundations for']
+            },
+            {
+                id: 'at_the_heart_of',
+                phrase: 'at the heart of',
+                regex: /\b(at the (?:very )?heart of|lies at the heart of)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 7,
+                reason: 'Dramatic spatial metaphor favored by LLMs over direct analytical framing.',
+                alternatives: ['central to', 'fundamental to', 'underlying', 'core to', 'driving']
+            },
+            {
+                id: 'serves_as_cornerstone',
+                phrase: 'serves as a cornerstone',
+                regex: /\b(serve(?:s|d)? as a (?:cornerstone|catalyst|testament|beacon|linchpin|foundation) (?:for|of|to))\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 9,
+                reason: 'Formulaic copula phrase that inflates routine concepts into grand architectural metaphors.',
+                alternatives: ['anchors', 'supports', 'grounds', 'substantiates', 'exemplifies']
+            },
+            {
+                id: 'broader_perspective',
+                phrase: 'from a broader perspective',
+                regex: /\b(from a broader perspective|on a broader scale|in a broader context)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Transition',
+                weight: 7,
+                reason: 'Generic zoom-out transition used by AI when shifting toward macro-level summary statements.',
+                alternatives: ['more broadly,', 'at the macro level,', 'across the discipline,', 'systemically,']
+            },
+            {
+                id: 'cannot_be_overstated',
+                phrase: 'cannot be overstated',
+                regex: /\b(cannot be overstated|can hardly be overstated|is difficult to overstate)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 9,
+                reason: 'Hyperbolic rhetorical filler disproportionately generated by LLMs to emphasize importance without citing quantitative impact.',
+                alternatives: ['is substantial', 'remains critical', 'warrants close attention', 'directly affects outcomes']
+            },
+            {
+                id: 'bridge_the_gap',
+                phrase: 'bridge the gap',
+                regex: /\b(bridg(?:e|es|ed|ing) the gap between)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 8,
+                reason: 'Standard AI idiom used in problem statements and thesis objectives instead of naming the exact methodological link.',
+                alternatives: ['connect', 'reconcile', 'link', 'address the divide between']
+            },
+            {
+                id: 'in_an_increasingly',
+                phrase: 'in an increasingly',
+                regex: /\b(in an increasingly \w+(?:\s+\w+)?|in today(?:\'|’)s (?:rapidly )?(?:evolving|digital|interconnected|modern) world)\b/gi,
+                category: 'transition',
+                categoryLabel: 'AI Introduction Cliché',
+                weight: 9,
+                reason: 'High-probability LLM essay opener that delays the specific research context with generic zeitgeist framing.',
+                alternatives: ['as contemporary systems shift,', 'within current practice,', 'given recent developments,']
+            },
+            {
+                id: 'has_emerged_as',
+                phrase: 'has emerged as',
+                regex: /\b(ha(?:s|ve) emerged as a (?:key|critical|central|prominent|leading|vital|powerful))\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 7,
+                reason: 'Default AI literature-review template for introducing a topic or technology.',
+                alternatives: ['now functions as a', 'has become a', 'operates as a primary']
+            },
+            {
+                id: 'holistic_approach',
+                phrase: 'holistic approach',
+                regex: /\b(a holistic (?:approach|framework|understanding|perspective|view)|robust framework|comprehensive understanding)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Vague AI Academic Phrase',
+                weight: 7,
+                reason: 'LLMs routinely substitute vague adjectives ("holistic", "robust", "comprehensive") instead of specifying the exact analytical model.',
+                alternatives: ['an integrated method', 'a systematic model', 'a multi-variable analysis', 'a detailed account']
+            },
+            {
+                id: 'valuable_insights',
+                phrase: 'valuable insights',
+                regex: /\b((?:offers?|provides?|yields?|gaining) valuable insights into)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 7,
+                reason: 'Generic praise phrase commonly placed in AI abstracts and discussion sections.',
+                alternatives: ['clarifies', 'documents', 'reveals specific patterns in', 'explains']
+            },
+            {
+                id: 'raises_questions',
+                phrase: 'raises important questions',
+                regex: /\b(raises? (?:important|critical|fundamental|significant|profound) questions (?:about|regarding))\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 7,
+                reason: 'Classic LLM concluding hedge that gestures toward implications without formulating a concrete research question.',
+                alternatives: ['challenges assumptions about', 'calls into question', 'prompts investigation into']
+            },
+            {
+                id: 'striking_balance',
+                phrase: 'striking a balance',
+                regex: /\b(strik(?:e|es|ing) a (?:delicate )?balance between|double-edged sword|stark contrast)\b/gi,
+                category: 'noun',
+                categoryLabel: 'AI Rhetorical Idiom',
+                weight: 8,
+                reason: 'Journalistic idiom heavily over-represented in AI-generated policy and ethics discussions.',
+                alternatives: ['reconciling', 'a trade-off between', 'a sharp divergence']
+            },
+            {
+                id: 'growing_body',
+                phrase: 'growing body of',
+                regex: /\b(a growing body of (?:research|literature|evidence|scholarship)|in light of these findings)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Literature Phrase',
+                weight: 6,
+                reason: 'Frequent AI literature-review boilerplate; citing specific scholars or years makes the prose immediately more authentic.',
+                alternatives: ['recent studies', 'accumulating empirical work', 'given these results']
+            },
+            {
+                id: 'poses_challenges',
+                phrase: 'poses significant challenges',
+                regex: /\b(poses? (?:significant|unique|complex|unprecedented|formidable) challenges(?: to| for)?)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic AI Phrase',
+                weight: 7,
+                reason: 'Vague AI problem-framing phrase that obscures what the actual operational or theoretical obstacle is.',
+                alternatives: ['complicates', 'constrains', 'impedes', 'creates specific obstacles for']
+            },
+            {
+                id: 'underscores',
+                phrase: 'underscores',
+                regex: /\b(underscore|underscores|underscored|underscoring)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 8,
+                reason: 'AI models repeatedly use "underscores" to manufacture artificial rhetorical emphasis instead of demonstrating causal evidence.',
+                alternatives: ['demonstrates', 'highlights', 'illustrates', 'confirms', 'reveals']
+            },
+            {
+                id: 'harness',
+                phrase: 'harness',
+                regex: /\b(harness|harnesses|harnessed|harnessing)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 7,
+                reason: 'Frequently paired with abstract nouns ("harness the potential") as a generic filler verb in AI-generated methodology and conclusion sections.',
+                alternatives: ['utilize', 'employ', 'apply', 'mobilize', 'integrate']
+            },
+            {
+                id: 'foster',
+                phrase: 'foster',
+                regex: /\b(foster|fosters|fostered|fostering)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 6,
+                reason: 'Disproportionately favored by LLMs when describing institutional policy, pedagogy, or collaborative outcomes.',
+                alternatives: ['cultivate', 'encourage', 'promote', 'facilitate', 'support']
+            },
+            {
+                id: 'navigating',
+                phrase: 'navigating',
+                regex: /\b(navigate|navigates|navigated|navigating)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 7,
+                reason: 'Metaphorical use of "navigating" (e.g., "navigating the complexities") is a classic AI structural trope in thesis introductions.',
+                alternatives: ['addressing', 'managing', 'negotiating', 'resolving', 'evaluating']
+            },
+            {
+                id: 'illuminate',
+                phrase: 'illuminate',
+                regex: /\b(illuminate|illuminates|illuminated|illuminating)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 6,
+                reason: 'Often used by language models as an overly dramatic synonym for explaining or clarifying empirical findings.',
+                alternatives: ['clarify', 'explain', 'expose', 'document', 'specify']
+            },
+            {
+                id: 'catalyze',
+                phrase: 'catalyze',
+                regex: /\b(catalyze|catalyzes|catalyzed|catalyzing)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 7,
+                reason: 'Used metaphorically outside chemistry by LLMs to dramatize routine institutional or social change.',
+                alternatives: ['accelerate', 'initiate', 'prompt', 'trigger', 'stimulate']
+            },
+            {
+                id: 'embark',
+                phrase: 'embark',
+                regex: /\b(embark|embarks|embarked|embarking)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 8,
+                reason: 'Narrative cliché ("embark on a journey/study") inappropriate for formal empirical reporting.',
+                alternatives: ['initiate', 'undertake', 'begin', 'commence', 'launch']
+            },
+            {
+                id: 'unveil',
+                phrase: 'unveil',
+                regex: /\b(unveil|unveils|unveiled|unveiling|unravel|unravels|unraveling)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 8,
+                reason: 'Theatrical verb favored by AI summaries when describing data analysis or literary interpretation.',
+                alternatives: ['disclose', 'uncover', 'identify', 'demonstrate', 'resolve']
+            },
+            {
+                id: 'bolster',
+                phrase: 'bolster',
+                regex: /\b(bolster|bolsters|bolstered|bolstering)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 6,
+                reason: 'High-frequency LLM verb used in place of more precise evidentiary verbs like "corroborate" or "reinforce".',
+                alternatives: ['reinforce', 'strengthen', 'corroborate', 'support', 'fortify']
+            },
+            {
+                id: 'elucidate',
+                phrase: 'elucidate',
+                regex: /\b(elucidate|elucidates|elucidated|elucidating)\b/gi,
+                category: 'verb',
+                categoryLabel: 'Overused AI Verb',
+                weight: 6,
+                reason: 'Elevated vocabulary disproportionately selected by RLHF models to sound scholarly.',
+                alternatives: ['clarify', 'explain', 'detail', 'interpret', 'define']
+            },
+
+            // --- Category: Florid Nouns & Metaphors (noun) ---
+            {
+                id: 'tapestry',
+                phrase: 'tapestry',
+                regex: /\b(tapestry|tapestries)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 10,
+                reason: '"Rich tapestry" is a hallmark purple-prose metaphor generated by LLMs when summarizing diverse historical, cultural, or sociological phenomena.',
+                alternatives: ['framework', 'composition', 'structure', 'configuration', 'spectrum']
+            },
+            {
+                id: 'testament',
+                phrase: 'testament',
+                regex: /\b(testament)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 8,
+                reason: 'Phrases like "stands as a testament to" introduce promotional, non-neutral tone unsuited for rigorous empirical writing.',
+                alternatives: ['evidence', 'indication', 'confirmation', 'proof', 'demonstration']
+            },
+            {
+                id: 'realm',
+                phrase: 'realm',
+                regex: /\b(realm|realms)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 8,
+                reason: '"In the realm of..." is a verbose AI prepositional opener that weakens disciplinary precision.',
+                alternatives: ['domain', 'field', 'discipline', 'arena', 'sector']
+            },
+            {
+                id: 'beacon',
+                phrase: 'beacon',
+                regex: /\b(beacon|beacons)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 9,
+                reason: 'Melodramatic metaphor ("beacon of hope/innovation") heavily flagged by academic originality scanners.',
+                alternatives: ['exemplar', 'model', 'benchmark', 'standard', 'guide']
+            },
+            {
+                id: 'landscape',
+                phrase: 'landscape',
+                regex: /\b(landscape|landscapes)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 6,
+                reason: 'Abstract overuse ("the evolving landscape of...") dilutes specificity when referring to a concrete market, literature, or institutional context.',
+                alternatives: ['environment', 'context', 'ecosystem', 'field', 'climate']
+            },
+            {
+                id: 'paradigm',
+                phrase: 'paradigm',
+                regex: /\b(paradigm|paradigms)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 5,
+                reason: 'While valid in Kuhnian philosophy of science, LLMs overuse "paradigm" as a grandiose synonym for any routine method or model.',
+                alternatives: ['model', 'framework', 'approach', 'methodology', 'standard']
+            },
+            {
+                id: 'synergy',
+                phrase: 'synergy',
+                regex: /\b(synergy|synergies|synergistic)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 7,
+                reason: 'Corporate-inflected buzzword frequently injected by AI into interdisciplinary research summaries.',
+                alternatives: ['interaction', 'collaboration', 'integration', 'complementarity', 'alignment']
+            },
+            {
+                id: 'interplay',
+                phrase: 'interplay',
+                regex: /\b(interplay)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 7,
+                reason: '"The intricate interplay between..." is a default LLM template for describing two interacting variables.',
+                alternatives: ['interaction', 'relationship', 'correlation', 'reciprocity', 'exchange']
+            },
+            {
+                id: 'facets',
+                phrase: 'facets',
+                regex: /\b(facet|facets)\b/gi,
+                category: 'noun',
+                categoryLabel: 'Florid AI Metaphor',
+                weight: 6,
+                reason: 'Often used vaguely by AI models instead of naming specific variables, dimensions, or components.',
+                alternatives: ['dimensions', 'aspects', 'components', 'elements', 'variables']
+            },
+
+            // --- Category: Formulaic Transitions & Hedging (transition) ---
+            {
+                id: 'furthermore',
+                phrase: 'furthermore',
+                regex: /\b(furthermore)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Transition',
+                weight: 5,
+                reason: 'LLMs chain paragraphs mechanically with "Furthermore," and "Moreover," instead of using organic conceptual transitions.',
+                alternatives: ['additionally', 'beyond this', 'equally important', 'in addition', 'specifically']
+            },
+            {
+                id: 'moreover',
+                phrase: 'moreover',
+                regex: /\b(moreover)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Transition',
+                weight: 5,
+                reason: 'High density of sentence-initial "Moreover," is a strong syntactic predictor of automated essay generation.',
+                alternatives: ['besides', 'what is more', 'further', 'similarly', 'next']
+            },
+            {
+                id: 'in_conclusion',
+                phrase: 'in conclusion',
+                regex: /\b(in conclusion|to summarize|all in all)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Transition',
+                weight: 6,
+                reason: 'Five-paragraph essay boilerplate that signals formulaic summarization in advanced undergraduate or graduate theses.',
+                alternatives: ['ultimately', 'taken together', 'in summary', 'overall', 'to synthesize']
+            },
+            {
+                id: 'nonetheless',
+                phrase: 'nonetheless',
+                regex: /\b(nonetheless|nevertheless)\b/gi,
+                category: 'transition',
+                categoryLabel: 'Formulaic Transition',
+                weight: 4,
+                reason: 'Frequently used by AI models at the start of final paragraph sentences to create a balanced "both-sides" hedge.',
+                alternatives: ['even so', 'still', 'however', 'yet', 'despite this']
+            },
+
+            // --- Category: Hyperbolic Adjectives (adjective) ---
+            {
+                id: 'pivotal',
+                phrase: 'pivotal',
+                regex: /\b(pivotal)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 8,
+                reason: 'AI models inflate routine variables or studies as "pivotal" without establishing statistical or historical magnitude.',
+                alternatives: ['central', 'key', 'decisive', 'foundational', 'influential']
+            },
+            {
+                id: 'multifaceted',
+                phrase: 'multifaceted',
+                regex: /\b(multifaceted)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 8,
+                reason: 'Used by AI to evade analytical precision by labeling any topic "complex and multifaceted."',
+                alternatives: ['complex', 'multidimensional', 'layered', 'composite', 'heterogeneous']
+            },
+            {
+                id: 'nuanced',
+                phrase: 'nuanced',
+                regex: /\b(nuanced)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 7,
+                reason: 'LLMs constantly call for a "nuanced understanding" rather than stating the actual distinction or qualification.',
+                alternatives: ['subtle', 'differentiated', 'precise', 'qualified', 'fine-grained']
+            },
+            {
+                id: 'intricate',
+                phrase: 'intricate',
+                regex: /\b(intricate|intricacies)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 7,
+                reason: 'Routine AI modifier paired with "web", "interplay", or "balance" to simulate depth.',
+                alternatives: ['complex', 'detailed', 'elaborate', 'interconnected', 'specific']
+            },
+            {
+                id: 'crucial',
+                phrase: 'crucial',
+                regex: /\b(crucial|vital|paramount)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 5,
+                reason: 'Repetitive reliance on "crucial/vital/paramount" creates breathless, uncalibrated urgency across academic prose.',
+                alternatives: ['essential', 'necessary', 'critical', 'significant', 'primary']
+            },
+            {
+                id: 'meticulous',
+                phrase: 'meticulous',
+                regex: /\b(meticulous|meticulously)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 7,
+                reason: 'Often inserted by AI when praising methodology or archival work in a generic, non-specific manner.',
+                alternatives: ['rigorous', 'systematic', 'thorough', 'precise', 'detailed']
+            },
+            {
+                id: 'overarching',
+                phrase: 'overarching',
+                regex: /\b(overarching)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 6,
+                reason: 'Disproportionately used by LLMs to describe thesis themes or theoretical frameworks.',
+                alternatives: ['central', 'primary', 'guiding', 'comprehensive', 'principal']
+            },
+            {
+                id: 'burgeoning',
+                phrase: 'burgeoning',
+                regex: /\b(burgeoning)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 7,
+                reason: 'Journalistic cliché ("the burgeoning field of...") heavily over-represented in AI literature review openings.',
+                alternatives: ['growing', 'expanding', 'emerging', 'developing', 'rapidly growing']
+            },
+            {
+                id: 'transformative',
+                phrase: 'transformative',
+                regex: /\b(transformative|groundbreaking|unprecedented|seamless)\b/gi,
+                category: 'adjective',
+                categoryLabel: 'Hyperbolic Adjective',
+                weight: 7,
+                reason: 'Promotional superlative rarely appropriate in neutral, peer-reviewed empirical analysis.',
+                alternatives: ['substantial', 'influential', 'major', 'notable', 'far-reaching']
+            }
+        ];
+
+        // ============================================================================
+        // 2. OFFLINE STYLOMETRIC HEURISTIC PATTERNS (CATCHES "STEALTH AI" WITHOUT CLICHÉS)
+        // ============================================================================
+        const STYLOMETRIC_STRUCTURAL_RULES = [
+            {
+                id: 'struct_participial_tail',
+                phrase: 'Trailing Participial Clause (, -ing...)',
+                // Matches comma + common LLM trailing present-participle clauses
+                regex: /,\s+(?:thereby\s+|thus\s+|ultimately\s+)?(?:highlighting|demonstrating|ensuring|reflecting|fostering|underscoring|illustrating|revealing|enabling|contributing\s+to|creating|promoting|allowing|reinforcing|driving|shaping|offering|providing|enhancing|facilitating)\s+[^.!?;]{6,65}(?=[.!?])/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Participial Tail',
+                weight: 9,
+                reason: 'Stylometric Tell #1: LLMs overwhelmingly append trailing "-ing" participial clauses (", highlighting...", ", ensuring...", ", thereby demonstrating...") to the end of declarative sentences to summarize significance. Human scholars prefer active finite verbs or separate sentences.',
+                alternatives: [
+                    '. This pattern demonstrates',
+                    '. Consequently, this structure',
+                    '; in turn, this process',
+                    ' and directly supports'
+                ],
+                isStructuralTail: true
+            },
+            {
+                id: 'struct_correlative_not_only',
+                phrase: 'Correlative "Not only... but also" Frame',
+                regex: /\b(not only\s+[^,.!?;]{3,45}?\s+but\s+(?:also\s+)?)/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Correlative Frame',
+                weight: 7,
+                reason: 'Stylometric Tell #2: AI models rely heavily on "not only X, but also Y" binary rhetorical framing at 4x the rate of human academic prose.',
+                alternatives: ['both ', 'simultaneously ', 'in addition to ']
+            },
+            {
+                id: 'struct_impersonal_hedging',
+                phrase: 'Impersonal AI Hedging / Passive Copula',
+                regex: /\b(it can be (?:argued|observed|seen|posited) that|one might (?:argue|consider|observe) that|is characterized by its ability to|can be understood as a reflection of)\b/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Impersonal Hedge',
+                weight: 8,
+                reason: 'Stylometric Tell #3: Indirect passive hedging distances the author from the claim and mirrors RLHF safety/neutrality training.',
+                alternatives: ['evidence indicates that', 'empirical data show that', 'this study contends that', 'specifically,']
+            },
+            {
+                id: 'struct_emdash_apophasis',
+                phrase: 'Em-Dash Rhetorical Insertion',
+                regex: /(\s*—\s*[^—.!?\n]{8,75}?\s*—\s*|\s*—\s*(?:particularly|especially|namely|notably|including)\s+[^.!?\n]{6,50}(?=[.!?]))/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Em-Dash Cadence',
+                weight: 7,
+                reason: 'Stylometric Tell #4: Modern LLMs overuse parenthetical em-dashes (—) to inject mid-sentence qualifications or dramatic appositives.',
+                alternatives: [', particularly ', ' (specifically ', '; specifically, ']
+            },
+            {
+                id: 'struct_nominalization_cluster',
+                phrase: 'Dense Nominalization Cluster',
+                // Matches "the [ -tion/-ment/-ity ] of [adjective] [ -tion/-ment/-ity ]"
+                regex: /\b(the\s+\w+(?:tion|ment|ity|ance|ence)\s+of\s+(?:\w+\s+)?\w+(?:tion|ment|ity|ance|ence)s?)\b/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Nominalization Cluster',
+                weight: 7,
+                reason: 'Stylometric Tell #5: Stacking abstract "-tion/-ment/-ity" nouns ("the implementation of institutional optimization") is a classic statistical signature of AI academic compression. Unpack nouns into active verbs.',
+                alternatives: ['how institutions implement', 'evaluating how systems', 'actively managing these processes']
+            },
+            {
+                id: 'struct_rule_of_three',
+                phrase: 'Abstract Rule-of-Three Triad (X, Y, and Z)',
+                // Matches triads of long/abstract words: "efficiency, scalability, and sustainability"
+                regex: /\b(\w{6,}(?:tion|ment|ity|ance|ence|ism|ing|al|ive),\s+\w{6,}(?:tion|ment|ity|ance|ence|ism|ing|al|ive),?\s+and\s+\w{6,}(?:tion|ment|ity|ance|ence|ism|ing|al|ive))\b/gi,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Rule-of-Three Triad',
+                weight: 7,
+                reason: 'Stylometric Tell #6: LLMs default to symmetrical three-item lists of abstract nouns or adjectives (e.g., "efficiency, transparency, and accountability"). Narrowing to the two most concrete factors breaks the robotic rhythm.',
+                alternatives: ['concrete operational factors', 'measurable performance outcomes', 'two primary institutional priorities']
+            },
+            {
+                id: 'struct_participial_opener',
+                phrase: 'Formulaic Participial Sentence Opener',
+                // Matches sentence-initial "By leveraging/examining/integrating..., "
+                regex: /(?:^|[.!?]\s+)(By\s+(?:leveraging|examining|integrating|addressing|fostering|utilizing|adopting|implementing|prioritizing|combining)\s+[^,.!?]{4,45},)/g,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Formulaic Opener',
+                weight: 7,
+                reason: 'Stylometric Tell #7: Opening sentences with "By [verb]ing X, [subject] can..." is a recurring syntactic template in AI-generated recommendations and methodology sections.',
+                alternatives: ['When researchers apply these methods,', 'Through targeted adjustments,', 'Direct application of this method allows']
+            },
+            {
+                id: 'struct_demonstrative_summary',
+                phrase: 'Vague Demonstrative Summary Opener',
+                regex: /(?:^|[.!?]\s+)((?:This|These)\s+(?:underscores|highlights|demonstrates|reflects|illustrates|reveals|findings?\s+(?:underscore|highlight|demonstrate|suggest))\s+(?:the|that|how))/g,
+                category: 'structural',
+                categoryLabel: 'Stylometric: Summary Opener',
+                weight: 6,
+                reason: 'Stylometric Tell #8: Starting a follow-up sentence with an unattended "This highlights/demonstrates..." is a common LLM cohesion shortcut. Name the specific noun or finding instead.',
+                alternatives: ['The observed pattern confirms that', 'This empirical shift indicates that', 'Our data show that']
+            }
+        ];
+
+        // ============================================================================
+        // 3. SAMPLE ACADEMIC THESIS EXCERPTS (INCLUDING "STEALTH AI" ZERO-CLICHÉ SAMPLE)
+        // ============================================================================
+        const SAMPLE_EXCERPTS = {
+            sociology: `As scholars delve into the evolving landscape of algorithmic governance, it becomes clear that digital platforms play a pivotal role in shaping civic discourse. Civic participation no longer occurs within a static public sphere; rather, it unfolds across a complex and multifaceted tapestry of automated recommendation feeds, highlighting the transformation of contemporary political socialization. Furthermore, recent empirical investigations demonstrate that opaque ranking heuristics foster polarized echo chambers while eroding institutional trust.
+
+Navigating the ethical challenges of this new realm requires a meticulous methodological paradigm. Moreover, the resilience of grassroots digital collectives stands as a testament to human agency amidst pervasive platform surveillance. It is important to note that regulatory frameworks must harness interdisciplinary synergy to shed light on how socio-technical architectures distribute visibility. In conclusion, this thesis underscores the crucial need for transparent algorithmic auditing as a beacon for democratic accountability.`,
+
+            stealth_ai: `The implementation of automated assessment protocols within higher education institutions has generated considerable debate regarding pedagogical standardization, reflecting a broader shift toward administrative quantification. It can be observed that algorithmic grading systems not only streamline faculty workloads across large introductory courses but also standardize evaluation criteria across diverse student cohorts, thereby ensuring consistent institutional compliance. The utilization of predictive analytics — particularly within longitudinal retention modeling — is characterized by its ability to identify at-risk populations prior to formal academic probation, demonstrating the operational efficiency of data-driven governance.
+
+One might argue that the proliferation of standardized learning metrics alters the relational dynamics of the seminar environment, creating a measurable tension between administrative efficiency and intellectual autonomy. The integration of automated feedback mechanisms facilitates rapid instructional iteration, offering administrators a scalable framework for curriculum optimization.`,
+
+            biotech: `Recent advances in CRISPR-Cas9 gene editing have ushered in a pivotal paradigm within translational medicine. When researchers delve into somatic cell modification, they must first navigate the multifaceted bioethical landscape surrounding off-target genomic mutations, underscoring the necessity of stringent preclinical validation. Furthermore, the rapid proliferation of synthetic biology plays a crucial role in determining why international oversight remains vital for patient safety.
+
+It is important to note that equitable clinical access serves as a cornerstone for responsible scientific innovation. By harnessing meticulous high-throughput sequencing, contemporary laboratories can foster a new realm of personalized oncology, paving the way for targeted therapeutic interventions. In conclusion, this dissertation examines the rich tapestry of regulatory protocols required to govern next-generation therapeutics.`,
+
+            economics: `To delve into the macroeconomic determinants of post-pandemic sovereign debt, one must examine the multifaceted landscape of emerging market fiscal policy. Central banks have played a crucial role in navigating inflationary shocks while attempting to foster long-term capital stability, thereby contributing to the stabilization of currency reserves. Furthermore, empirical panel data underscores that premature austerity measures can undermine fragile labor recoveries.
+
+Moreover, it is worth noting that green industrial subsidies represent a transformative paradigm within global trade competition. Developing nations seeking to harness renewable energy investments face a pivotal bottleneck in sovereign bond yields, reflecting the structural asymmetries of international capital markets. In conclusion, fostering policy synergy across multilateral lenders remains essential.`
+        };
+
+        // ============================================================================
+        // 4. APPLICATION STATE & CUSTOM LOCALSTORAGE RULES
+        // ============================================================================
+        const CUSTOM_RULES_STORAGE_KEY = 'switchback_custom_ai_triggers_v3';
+
+        let appState = {
+            documentText: SAMPLE_EXCERPTS.sociology,
+            viewMode: 'interactive', // 'interactive' | 'raw'
+            categoryFilter: 'all',   // 'all' | 'structural' | 'verb' | 'noun' | 'transition' | 'adjective'
+            detectedFlags: [],       // Array of { instanceId, start, end, matchedText, rule, ignored }
+            ignoredOffsets: new Set(),
+            selectedFlagIndex: -1,
+            revisionsCount: 0,
+            customRules: [],
+            stylometrics: {
+                participialCount: 0,
+                uniformityScore: 0,
+                nominalDensity: 0,
+                hedgingCount: 0,
+                punctCadenceCount: 0,
+                compositeStylometricScore: 0
+            }
+        };
+
+        function loadCustomRulesFromStorage() {
+            try {
+                const raw = localStorage.getItem(CUSTOM_RULES_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) {
+                        appState.customRules = parsed;
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not access localStorage:', e);
+            }
+        }
+
+        function saveCustomRulesToStorage() {
+            try {
+                localStorage.setItem(CUSTOM_RULES_STORAGE_KEY, JSON.stringify(appState.customRules));
+            } catch (e) {
+                console.warn('Could not save custom triggers to localStorage:', e);
+            }
+        }
+
+        function getActiveLexicon() {
+            const customCompiled = appState.customRules.map((cr, i) => {
+                const escaped = cr.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                return {
+                    id: `custom_${i}_${cr.phrase}`,
+                    phrase: cr.phrase,
+                    regex: new RegExp(`\\b(${escaped})\\b`, 'gi'),
+                    category: 'transition',
+                    categoryLabel: 'Custom User Trigger',
+                    weight: 9,
+                    reason: 'Custom AI trigger phrase added to your personal Switchback browser dictionary.',
+                    alternatives: cr.alternatives && cr.alternatives.length > 0 ? cr.alternatives : ['[revise phrase]', '[humanize]']
+                };
+            });
+            return [...customCompiled, ...BASE_AI_CLICHE_DICTIONARY, ...STYLOMETRIC_STRUCTURAL_RULES];
+        }
+
+        // ============================================================================
+        // 5. DOM ELEMENT REFERENCES
+        // ============================================================================
+        const dom = {
+            sampleSelect: document.getElementById('sampleSelect'),
+            loadSampleBtn: document.getElementById('loadSampleBtn'),
+            fileUploadInput: document.getElementById('fileUploadInput'),
+            uploadFileBtn: document.getElementById('uploadFileBtn'),
+            toggleCustomDictBtn: document.getElementById('toggleCustomDictBtn'),
+            customDictDrawer: document.getElementById('customDictDrawer'),
+            customTriggerPhraseInput: document.getElementById('customTriggerPhraseInput'),
+            customTriggerAltInput: document.getElementById('customTriggerAltInput'),
+            addCustomTriggerBtn: document.getElementById('addCustomTriggerBtn'),
+            customTriggersList: document.getElementById('customTriggersList'),
+            runDiagnosticsBtn: document.getElementById('runDiagnosticsBtn'),
+            diagnosticsDrawer: document.getElementById('diagnosticsDrawer'),
+            closeDiagnosticsBtn: document.getElementById('closeDiagnosticsBtn'),
+            diagnosticsResultsGrid: document.getElementById('diagnosticsResultsGrid'),
+            copyTextBtn: document.getElementById('copyTextBtn'),
+            clearTextBtn: document.getElementById('clearTextBtn'),
+            modeInteractiveBtn: document.getElementById('modeInteractiveBtn'),
+            modeRawEditBtn: document.getElementById('modeRawEditBtn'),
+            badgeFlagCount: document.getElementById('badgeFlagCount'),
+            interactiveBanner: document.getElementById('interactiveBanner'),
+            autoHumanizeBtn: document.getElementById('autoHumanizeBtn'),
+            interactiveViewContainer: document.getElementById('interactiveViewContainer'),
+            rawEditContainer: document.getElementById('rawEditContainer'),
+            thesisInput: document.getElementById('thesisInput'),
+            applyRawChangesBtn: document.getElementById('applyRawChangesBtn'),
+            metricWordCount: document.getElementById('metricWordCount'),
+            metricSentenceCount: document.getElementById('metricSentenceCount'),
+            metricAvgSentence: document.getElementById('metricAvgSentence'),
+            humanizedCounterBadge: document.getElementById('humanizedCounterBadge'),
+            categoryPills: document.querySelectorAll('.category-pill'),
+            // Inspector elements
+            inspectorNavControls: document.getElementById('inspectorNavControls'),
+            prevFlagBtn: document.getElementById('prevFlagBtn'),
+            nextFlagBtn: document.getElementById('nextFlagBtn'),
+            inspectorIndexIndicator: document.getElementById('inspectorIndexIndicator'),
+            inspectorEmptyState: document.getElementById('inspectorEmptyState'),
+            inspectFirstFlagBtn: document.getElementById('inspectFirstFlagBtn'),
+            inspectorActiveContent: document.getElementById('inspectorActiveContent'),
+            activeFlagCategoryBadge: document.getElementById('activeFlagCategoryBadge'),
+            activeFlagSeverity: document.getElementById('activeFlagSeverity'),
+            activeFlagPhrase: document.getElementById('activeFlagPhrase'),
+            activeFlagReason: document.getElementById('activeFlagReason'),
+            alternativesGrid: document.getElementById('alternativesGrid'),
+            customReplacementInput: document.getElementById('customReplacementInput'),
+            applyCustomReplacementBtn: document.getElementById('applyCustomReplacementBtn'),
+            ignoreSingleFlagBtn: document.getElementById('ignoreSingleFlagBtn'),
+            // Scoring & Stylometric Metrics
+            riskVerdictBadge: document.getElementById('riskVerdictBadge'),
+            scoreGaugeArc: document.getElementById('scoreGaugeArc'),
+            aiScoreValue: document.getElementById('aiScoreValue'),
+            scoreExplanationText: document.getElementById('scoreExplanationText'),
+            clicheDensityValue: document.getElementById('clicheDensityValue'),
+            stylometricScoreLabel: document.getElementById('stylometricScoreLabel'),
+            burstinessValue: document.getElementById('burstinessValue'),
+            heurParticipialLabel: document.getElementById('heurParticipialLabel'),
+            heurParticipialBar: document.getElementById('heurParticipialBar'),
+            heurUniformityLabel: document.getElementById('heurUniformityLabel'),
+            heurUniformityBar: document.getElementById('heurUniformityBar'),
+            heurNominalLabel: document.getElementById('heurNominalLabel'),
+            heurNominalBar: document.getElementById('heurNominalBar'),
+            heurHedgingLabel: document.getElementById('heurHedgingLabel'),
+            heurHedgingBar: document.getElementById('heurHedgingBar'),
+            heurPunctLabel: document.getElementById('heurPunctLabel'),
+            heurPunctBar: document.getElementById('heurPunctBar'),
+            heurEntropyLabel: document.getElementById('heurEntropyLabel'),
+            heurEntropyBar: document.getElementById('heurEntropyBar'),
+            heurTriadLabel: document.getElementById('heurTriadLabel'),
+            heurTriadBar: document.getElementById('heurTriadBar'),
+            statFlagCount: document.getElementById('statFlagCount'),
+            barFlagIntensity: document.getElementById('barFlagIntensity'),
+            statAuthenticityScore: document.getElementById('statAuthenticityScore'),
+            barAuthenticity: document.getElementById('barAuthenticity'),
+            compAiPct: document.getElementById('compAiPct'),
+            compMixedPct: document.getElementById('compMixedPct'),
+            compHumanPct: document.getElementById('compHumanPct'),
+            compAiBar: document.getElementById('compAiBar'),
+            compMixedBar: document.getElementById('compMixedBar'),
+            compHumanBar: document.getElementById('compHumanBar'),
+            uniquePatternsCount: document.getElementById('uniquePatternsCount'),
+            detectedListContainer: document.getElementById('detectedListContainer'),
+            toastNotification: document.getElementById('toastNotification'),
+            toastMessage: document.getElementById('toastMessage')
+        };
+
+        // ============================================================================
+        // 6. UTILITY HELPERS
+        // ============================================================================
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function preserveCase(original, replacement) {
+            if (!original || !replacement) return replacement;
+            if (original === original.toUpperCase() && original.length > 1) {
+                return replacement.toUpperCase();
+            }
+            if (original[0] === original[0].toUpperCase() && /^[A-Z]/.test(original[0])) {
+                return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+            }
+            return replacement;
+        }
+
+        let toastTimer = null;
+        function showToast(message) {
+            if (!dom.toastNotification || !dom.toastMessage) return;
+            dom.toastMessage.textContent = message;
+            dom.toastNotification.classList.remove('opacity-0', 'translate-y-3');
+            dom.toastNotification.classList.add('opacity-100', 'translate-y-0');
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                dom.toastNotification.classList.remove('opacity-100', 'translate-y-0');
+                dom.toastNotification.classList.add('opacity-0', 'translate-y-3');
+            }, 2600);
+        }
+
+        function refreshIcons() {
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        }
+
+        // ============================================================================
+        // 7. CORE SCANNER & 7-AXIS STYLOMETRIC ANALYSIS ENGINE
+        // ============================================================================
+        function extractFlagsFromText(text, ignoredSet = new Set()) {
+            const lexicon = getActiveLexicon();
+            const rawMatches = [];
+
+            lexicon.forEach(rule => {
+                const regex = new RegExp(rule.regex.source, rule.regex.flags);
+                let match;
+                while ((match = regex.exec(text)) !== null) {
+                    const matchedText = match[1] || match[0];
+                    const matchStart = match.index + (match[0].indexOf(matchedText));
+                    const matchEnd = matchStart + matchedText.length;
+                    const offsetKey = `${matchStart}:${matchEnd}`;
+
+                    if (ignoredSet.has(offsetKey)) continue;
+
+                    rawMatches.push({
+                        start: matchStart,
+                        end: matchEnd,
+                        matchedText,
+                        rule
+                    });
+
+                    if (match.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+                }
+            });
+
+            // Sort by start position, preferring longer/higher-weight matches first
+            rawMatches.sort((a, b) => {
+                if (a.start !== b.start) return a.start - b.start;
+                if (b.rule.weight !== a.rule.weight) return b.rule.weight - a.rule.weight;
+                return (b.end - b.start) - (a.end - a.start);
+            });
+
+            // Resolve overlapping spans cleanly
+            const resolved = [];
+            let lastEnd = -1;
+            rawMatches.forEach(item => {
+                if (item.start >= lastEnd) {
+                    resolved.push({
+                        ...item,
+                        instanceId: `flag_${item.start}_${item.end}`
+                    });
+                    lastEnd = item.end;
+                }
+            });
+
+            return resolved;
+        }
+
+        function analyzeTextMetrics(text, flags) {
+            const trimmedText = text.trim();
+            const words = trimmedText ? trimmedText.split(/\s+/).filter(Boolean) : [];
+            const wordCount = words.length;
+
+            const sentenceChunks = trimmedText ? (trimmedText.match(/[^.!?]+[.!?]*/g) || []) : [];
+            const sentences = sentenceChunks.map(s => s.trim()).filter(s => s.length > 2);
+            const sentenceCount = sentences.length;
+            const avgSentenceLength = sentenceCount > 0 ? Math.round((wordCount / sentenceCount) * 10) / 10 : 0;
+
+            // Axis 1: Participial Tail Clauses (, -ing...)
+            const participialMatches = text.match(/,\s+(?:thereby\s+|thus\s+|ultimately\s+)?(?:highlighting|demonstrating|ensuring|reflecting|fostering|underscoring|illustrating|revealing|enabling|contributing\s+to|creating|promoting|allowing|reinforcing|driving|shaping|offering|providing|enhancing|facilitating)\b/gi) || [];
+            const participialCount = participialMatches.length;
+            const participialAxisScore = Math.min(100, sentenceCount > 0 ? Math.round((participialCount / Math.max(sentenceCount * 0.45, 1)) * 100) : 0);
+
+            // Axis 2: Sentence Cadence Uniformity (Low Burstiness)
+            let uniformityAxisScore = 0;
+            let burstinessLabel = 'N/A';
+            if (sentenceCount >= 3) {
+                const lengths = sentences.map(s => s.split(/\s+/).filter(Boolean).length);
+                const mean = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+                const variance = lengths.reduce((sum, len) => sum + Math.pow(len - mean, 2), 0) / lengths.length;
+                const stdDev = Math.sqrt(variance);
+                const cv = mean > 0 ? stdDev / mean : 0;
+
+                // Lower CV means more uniform (AI-like) sentence cadence
+                uniformityAxisScore = Math.max(0, Math.min(100, Math.round((1 - Math.min(cv / 0.55, 1)) * 100)));
+                if (cv < 0.22) burstinessLabel = 'Very Low (Uniform)';
+                else if (cv < 0.36) burstinessLabel = 'Moderate';
+                else burstinessLabel = 'High (Human-like)';
+            } else if (sentenceCount > 0 && wordCount >= 18) {
+                uniformityAxisScore = avgSentenceLength >= 22 ? 55 : 25;
+                burstinessLabel = 'Short Sample';
+            }
+
+            // Axis 3: Abstract Nominalization Density (-tion, -ment, -ity, -ance, -ence)
+            const nominalWords = words.filter(w => {
+                const clean = w.replace(/[^a-z]/gi, '');
+                return clean.length >= 6 && /(?:tion|tions|ment|ments|ity|ities|ance|ances|ence|ences)$/i.test(clean);
+            });
+            const nominalDensity = wordCount > 0 ? (nominalWords.length / wordCount) * 100 : 0;
+            const nominalAxisScore = Math.min(100, Math.round(Math.max(0, (nominalDensity - 3.5) / 11.5) * 100));
+
+            // Axis 4: Impersonal Hedging & Passive Copula Framing
+            const hedgingMatches = text.match(/\b(it can be (?:argued|observed|seen|posited) that|one might (?:argue|consider|observe) that|is characterized by|can be understood as|it is (?:important|worth|crucial|essential) to note|plays? a (?:crucial|pivotal|vital|key|significant) role)\b/gi) || [];
+            const hedgingCount = hedgingMatches.length;
+            const hedgingAxisScore = Math.min(100, Math.round((hedgingCount / Math.max(sentenceCount * 0.35, 1)) * 100));
+
+            // Axis 5: Em-Dash, Colon & Correlative ("not only... but also") Cadence
+            const emDashMatches = text.match(/—|--/g) || [];
+            const correlativeMatches = text.match(/\bnot only\b[\s\S]{1,80}?\bbut\s+(?:also\s+)?/gi) || [];
+            const colonMatches = text.match(/:\s+[a-z]/g) || [];
+            const punctCadenceCount = emDashMatches.length + (correlativeMatches.length * 2) + colonMatches.length;
+            const punctAxisScore = Math.min(100, Math.round((punctCadenceCount / Math.max(sentenceCount * 0.5, 1)) * 100));
+
+            // Axis 6: Vocabulary Predictability & Repetition (Content-Word Diversity)
+            let entropyAxisScore = 0;
+            if (wordCount >= 25) {
+                const contentWords = words
+                    .map(w => w.toLowerCase().replace(/[^a-z]/g, ''))
+                    .filter(w => w.length >= 5);
+                const uniqueContent = new Set(contentWords);
+                const ttr = contentWords.length > 0 ? uniqueContent.size / contentWords.length : 1;
+                const avgWordLen = words.reduce((sum, w) => sum + w.replace(/[^a-z]/gi, '').length, 0) / wordCount;
+                // High avg word length (>5.6) + repetitive abstract stems indicate LLM polish
+                const lengthSignal = Math.max(0, Math.min(60, Math.round((avgWordLen - 4.9) * 42)));
+                const repetitionSignal = ttr < 0.72 ? Math.round((0.72 - ttr) * 140) : 0;
+                entropyAxisScore = Math.min(100, lengthSignal + repetitionSignal);
+            }
+
+            // Axis 7: Rule-of-Three Triads & Formulaic Sentence Openers
+            const triadMatches = text.match(/\b\w{5,},\s+\w{5,},?\s+and\s+\w{5,}\b/gi) || [];
+            const formulaicOpeners = text.match(/(?:^|[.!?]\s+)(?:By\s+\w+ing\b|Furthermore,|Moreover,|Additionally,|In conclusion,|Ultimately,|This\s+(?:underscores|highlights|demonstrates|reflects|illustrates|reveals)\b)/g) || [];
+            const triadCount = triadMatches.length + formulaicOpeners.length;
+            const triadAxisScore = Math.min(100, Math.round((triadCount / Math.max(sentenceCount * 0.45, 1)) * 100));
+
+            // Weighted Composite Stylometric Score (0-100)
+            const compositeStylometricScore = wordCount > 0
+                ? Math.min(98, Math.round(
+                    participialAxisScore * 0.24 +
+                    uniformityAxisScore * 0.14 +
+                    nominalAxisScore * 0.18 +
+                    hedgingAxisScore * 0.16 +
+                    punctAxisScore * 0.10 +
+                    entropyAxisScore * 0.08 +
+                    triadAxisScore * 0.10
+                ))
+                : 0;
+
+            // Lexical vs Structural flags
+            const lexicalFlags = flags.filter(f => f.rule.category !== 'structural');
+            const totalFlagCount = flags.length;
+
+            // Sentence-by-Sentence Classification (AI / Mixed / Human)
+            let aiSentCount = 0;
+            let mixedSentCount = 0;
+            let humanSentCount = 0;
+
+            if (sentenceCount > 0) {
+                let cursorPos = 0;
+                sentenceChunks.forEach(chunk => {
+                    const trimmed = chunk.trim();
+                    const chunkStart = text.indexOf(chunk, cursorPos);
+                    const chunkEnd = chunkStart + chunk.length;
+                    cursorPos = chunkEnd;
+                    if (trimmed.length <= 2) return;
+
+                    const sWords = trimmed.split(/\s+/).filter(Boolean);
+                    const sFlags = flags.filter(f => f.start >= chunkStart && f.end <= chunkEnd);
+                    const sWeight = sFlags.reduce((sum, f) => sum + f.rule.weight, 0);
+                    const sNomCount = sWords.filter(w => {
+                        const clean = w.replace(/[^a-z]/gi, '');
+                        return clean.length >= 6 && /(?:tion|tions|ment|ments|ity|ities|ance|ances|ence|ences)$/i.test(clean);
+                    }).length;
+                    const sNomRatio = sWords.length > 0 ? sNomCount / sWords.length : 0;
+
+                    const sentRisk = sWeight * 6 + (sNomRatio >= 0.14 ? 25 : 0) + (uniformityAxisScore >= 60 && sWords.length >= 16 ? 20 : 0);
+                    if (sentRisk >= 55) {
+                        aiSentCount++;
+                    } else if (sentRisk >= 24) {
+                        mixedSentCount++;
+                    } else {
+                        humanSentCount++;
+                    }
+                });
+            }
+
+            const totalClassified = Math.max(1, aiSentCount + mixedSentCount + humanSentCount);
+            const aiSentPct = wordCount > 0 ? Math.round((aiSentCount / totalClassified) * 100) : 0;
+            const mixedSentPct = wordCount > 0 ? Math.round((mixedSentCount / totalClassified) * 100) : 0;
+            const humanSentPct = wordCount > 0 ? Math.max(0, 100 - aiSentPct - mixedSentPct) : 100;
+
+            let aiProbability = 0;
+            if (wordCount > 0) {
+                const totalLexicalWeight = lexicalFlags.reduce((sum, f) => sum + f.rule.weight, 0);
+                const lexicalScore = Math.min(98, ((totalLexicalWeight * 2.3) / Math.max(wordCount, 20)) * 100);
+                const sentenceClassificationScore = Math.min(98, aiSentPct + Math.round(mixedSentPct * 0.45));
+
+                const primarySignal = Math.max(lexicalScore, compositeStylometricScore, sentenceClassificationScore);
+                const secondaryBoost = Math.min(lexicalScore, compositeStylometricScore) * 0.32;
+                aiProbability = Math.min(98, Math.round(primarySignal + secondaryBoost));
+            }
+
+            const clicheDensity = wordCount > 0 ? ((lexicalFlags.length / wordCount) * 100) : 0;
+
+            return {
+                wordCount,
+                sentenceCount,
+                avgSentenceLength,
+                totalFlagCount,
+                lexicalFlagCount: lexicalFlags.length,
+                clicheDensity,
+                burstinessLabel,
+                participialCount,
+                participialAxisScore,
+                uniformityAxisScore,
+                nominalDensity,
+                nominalAxisScore,
+                hedgingCount,
+                hedgingAxisScore,
+                punctCadenceCount,
+                punctAxisScore,
+                entropyAxisScore,
+                triadCount,
+                triadAxisScore,
+                compositeStylometricScore,
+                aiSentPct,
+                mixedSentPct,
+                humanSentPct,
+                aiProbability
+            };
+        }
+
+        function scanAndRenderAll(flashStart = -1, flashLen = 0) {
+            appState.detectedFlags = extractFlagsFromText(appState.documentText, appState.ignoredOffsets);
+            if (appState.selectedFlagIndex >= appState.detectedFlags.length) {
+                appState.selectedFlagIndex = appState.detectedFlags.length > 0 ? 0 : -1;
+            }
+
+            updateMetricsAndScore();
+            renderInteractiveDocument(flashStart, flashLen);
+            renderDetectedList();
+            renderInspector();
+            refreshIcons();
+        }
+
+        function updateMetricsAndScore() {
+            const m = analyzeTextMetrics(appState.documentText, appState.detectedFlags);
+
+            // Document Metrics Bar
+            dom.metricWordCount.textContent = m.wordCount.toLocaleString();
+            dom.metricSentenceCount.textContent = m.sentenceCount.toLocaleString();
+            dom.metricAvgSentence.textContent = `${m.avgSentenceLength} words`;
+            dom.badgeFlagCount.textContent = m.totalFlagCount;
+
+            if (appState.revisionsCount > 0) {
+                dom.humanizedCounterBadge.classList.remove('hidden');
+                dom.humanizedCounterBadge.textContent = `${appState.revisionsCount} Revision${appState.revisionsCount === 1 ? '' : 's'} Applied`;
+            } else {
+                dom.humanizedCounterBadge.classList.add('hidden');
+            }
+
+            // Sentence Classification Composition Bar
+            dom.compAiPct.textContent = `${m.aiSentPct}%`;
+            dom.compMixedPct.textContent = `${m.mixedSentPct}%`;
+            dom.compHumanPct.textContent = `${m.humanSentPct}%`;
+            dom.compAiBar.style.width = `${m.aiSentPct}%`;
+            dom.compMixedBar.style.width = `${m.mixedSentPct}%`;
+            dom.compHumanBar.style.width = `${m.humanSentPct}%`;
+
+            // 7-Axis Stylometric Bars
+            dom.heurParticipialLabel.textContent = `${m.participialCount} detected`;
+            dom.heurParticipialBar.style.width = `${m.participialAxisScore}%`;
+
+            dom.heurUniformityLabel.textContent = `${m.uniformityAxisScore}%`;
+            dom.heurUniformityBar.style.width = `${m.uniformityAxisScore}%`;
+
+            dom.heurNominalLabel.textContent = `${m.nominalDensity.toFixed(1)}%`;
+            dom.heurNominalBar.style.width = `${m.nominalAxisScore}%`;
+
+            dom.heurHedgingLabel.textContent = `${m.hedgingCount} detected`;
+            dom.heurHedgingBar.style.width = `${m.hedgingAxisScore}%`;
+
+            dom.heurPunctLabel.textContent = `${m.punctCadenceCount} markers`;
+            dom.heurPunctBar.style.width = `${m.punctAxisScore}%`;
+
+            dom.heurEntropyLabel.textContent = `${m.entropyAxisScore}%`;
+            dom.heurEntropyBar.style.width = `${m.entropyAxisScore}%`;
+
+            dom.heurTriadLabel.textContent = `${m.triadCount} patterns`;
+            dom.heurTriadBar.style.width = `${m.triadAxisScore}%`;
+
+            // Summary Tiles
+            dom.clicheDensityValue.textContent = `${m.clicheDensity.toFixed(1)}%`;
+            dom.stylometricScoreLabel.textContent = `${m.compositeStylometricScore} / 100`;
+            dom.burstinessValue.textContent = m.burstinessLabel;
+
+            const authenticity = Math.max(0, 100 - m.aiProbability);
+            dom.statFlagCount.textContent = m.totalFlagCount;
+            dom.barFlagIntensity.style.width = `${Math.min(100, m.totalFlagCount * 7)}%`;
+            dom.statAuthenticityScore.textContent = `${authenticity}%`;
+            dom.barAuthenticity.style.width = `${authenticity}%`;
+
+            // Semi-Circular SVG Gauge (Arc length ~ 150.8)
+            const arcLength = 150.8;
+            const dashOffset = arcLength - (arcLength * (m.aiProbability / 100));
+            dom.scoreGaugeArc.style.strokeDashoffset = dashOffset.toFixed(2);
+            dom.aiScoreValue.textContent = `${m.aiProbability}%`;
+
+            if (m.wordCount === 0) {
+                dom.scoreGaugeArc.style.stroke = '#94a3b8';
+                dom.riskVerdictBadge.textContent = 'Awaiting Text';
+                dom.riskVerdictBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300';
+                dom.scoreExplanationText.textContent = 'Paste or upload an academic thesis excerpt to run lexical and 7-axis stylometric analysis.';
+            } else if (m.aiProbability >= 65) {
+                dom.scoreGaugeArc.style.stroke = '#e11d48';
+                dom.riskVerdictBadge.textContent = 'High AI Signal';
+                dom.riskVerdictBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300';
+                dom.scoreExplanationText.textContent = 'Strong LLM lexical clichés and/or structural cadence detected. Review highlighted spans to restore an authentic scholarly voice.';
+            } else if (m.aiProbability >= 35) {
+                dom.scoreGaugeArc.style.stroke = '#d97706';
+                dom.riskVerdictBadge.textContent = 'Mixed / Moderate';
+                dom.riskVerdictBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300';
+                dom.scoreExplanationText.textContent = 'Moderate AI-like phrasing or formulaic sentence structure detected. Replacing the flagged clauses will improve originality.';
+            } else {
+                dom.scoreGaugeArc.style.stroke = '#10b981';
+                dom.riskVerdictBadge.textContent = 'Authentic Human';
+                dom.riskVerdictBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300';
+                dom.scoreExplanationText.textContent = 'Low AI signature. Your prose shows natural sentence variation and minimal LLM cliché density.';
+            }
+        }
+
+        // ============================================================================
+        // 8. INTERACTIVE DOCUMENT & DETECTED LIST RENDERING
+        // ============================================================================
+        function renderInteractiveDocument(flashStart = -1, flashLen = 0) {
+            const text = appState.documentText;
+            if (!text.trim()) {
+                dom.interactiveViewContainer.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center py-16 text-slate-400 font-sans">
+                    <i data-lucide="file-search" class="w-10 h-10 mb-3 text-sky-400/70"></i>
+                    <p class="text-sm font-semibold text-slate-600">No thesis text loaded</p>
+                    <p class="text-xs mt-1">Switch to <strong>Raw Paste / Edit</strong>, upload a file, or load a sample excerpt above.</p>
+                </div>`;
+                return;
+            }
+
+            const visibleFlags = appState.detectedFlags.filter(flag =>
+                appState.categoryFilter === 'all' || flag.rule.category === appState.categoryFilter
+            );
+
+            let html = '';
+            let cursor = 0;
+
+            visibleFlags.forEach(flag => {
+                if (flag.start > cursor) {
+                    html += renderPlainSegment(text.slice(cursor, flag.start), cursor, flashStart, flashLen);
+                }
+
+                const globalIdx = appState.detectedFlags.indexOf(flag);
+                const isActive = globalIdx === appState.selectedFlagIndex;
+                const categoryClass = `flag-${flag.rule.category}`;
+                html += `<span class="ai-flag ${categoryClass} ${isActive ? 'active-flag' : ''}" data-flag-index="${globalIdx}" title="${escapeHtml(flag.rule.categoryLabel)} — Click to review">${escapeHtml(flag.matchedText)}</span>`;
+                cursor = flag.end;
+            });
+
+            if (cursor < text.length) {
+                html += renderPlainSegment(text.slice(cursor), cursor, flashStart, flashLen);
+            }
+
+            dom.interactiveViewContainer.innerHTML = html;
+
+            dom.interactiveViewContainer.querySelectorAll('.ai-flag').forEach(span => {
+                span.addEventListener('click', () => {
+                    const idx = parseInt(span.getAttribute('data-flag-index'), 10);
+                    selectFlag(idx, false);
+                });
+            });
+        }
+
+        function renderPlainSegment(segment, segmentStart, flashStart, flashLen) {
+            if (flashStart >= 0 && flashLen > 0) {
+                const segEnd = segmentStart + segment.length;
+                const overlapStart = Math.max(segmentStart, flashStart);
+                const overlapEnd = Math.min(segEnd, flashStart + flashLen);
+                if (overlapStart < overlapEnd) {
+                    const relStart = overlapStart - segmentStart;
+                    const relEnd = overlapEnd - segmentStart;
+                    return (
+                        escapeHtml(segment.slice(0, relStart)) +
+                        `<span class="humanized-flash">${escapeHtml(segment.slice(relStart, relEnd))}</span>` +
+                        escapeHtml(segment.slice(relEnd))
+                    );
+                }
+            }
+            return escapeHtml(segment);
+        }
+
+        function renderDetectedList() {
+            const flags = appState.detectedFlags;
+            if (flags.length === 0) {
+                dom.uniquePatternsCount.textContent = '0 patterns';
+                dom.detectedListContainer.innerHTML = `<div class="text-xs text-slate-500 text-center py-6 glass-blue-tint rounded-xl">
+                    No AI clichés or structural patterns detected in this draft.
+                </div>`;
+                return;
+            }
+
+            const grouped = new Map();
+            flags.forEach((flag, idx) => {
+                const key = flag.rule.id;
+                if (!grouped.has(key)) {
+                    grouped.set(key, { rule: flag.rule, count: 0, firstIndex: idx });
+                }
+                grouped.get(key).count++;
+            });
+
+            dom.uniquePatternsCount.textContent = `${grouped.size} unique pattern${grouped.size === 1 ? '' : 's'}`;
+
+            const badgeColors = {
+                structural: 'bg-teal-100 text-teal-900 border-teal-300',
+                verb: 'bg-sky-100 text-sky-900 border-sky-300',
+                noun: 'bg-violet-100 text-violet-900 border-violet-300',
+                transition: 'bg-amber-100 text-amber-900 border-amber-300',
+                adjective: 'bg-rose-100 text-rose-900 border-rose-300'
+            };
+
+            let listHtml = '';
+            grouped.forEach(entry => {
+                const pillStyle = badgeColors[entry.rule.category] || 'bg-slate-100 text-slate-800 border-slate-300';
+                listHtml += `
+                    <button type="button" data-jump-index="${entry.firstIndex}" class="w-full text-left glass-blue-tint hover:bg-sky-100/70 rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-2 transition">
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-900 truncate">${escapeHtml(entry.rule.phrase)}</div>
+                            <div class="text-[11px] text-slate-600 truncate">${escapeHtml(entry.rule.categoryLabel)}</div>
+                        </div>
+                        <span class="shrink-0 text-[11px] font-bold px-2 py-0.5 rounded-full border ${pillStyle}">
+                            ${entry.count}×
+                        </span>
+                    </button>
+                `;
+            });
+
+            dom.detectedListContainer.innerHTML = listHtml;
+            dom.detectedListContainer.querySelectorAll('[data-jump-index]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.getAttribute('data-jump-index'), 10);
+                    selectFlag(idx, true);
+                });
+            });
+        }
+
+        // ============================================================================
+        // 9. PERSONALIZED REVIEW INSPECTOR & REPLACEMENT ACTIONS
+        // ============================================================================
+        function selectFlag(index, scrollToHighlight = true) {
+            if (index < 0 || index >= appState.detectedFlags.length) {
+                appState.selectedFlagIndex = -1;
+                renderInspector();
+                renderInteractiveDocument();
+                return;
+            }
+
+            appState.selectedFlagIndex = index;
+            renderInspector();
+            renderInteractiveDocument();
+
+            if (scrollToHighlight) {
+                const activeEl = dom.interactiveViewContainer.querySelector(`.ai-flag[data-flag-index="${index}"]`);
+                if (activeEl) {
+                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            refreshIcons();
+        }
+
+        function renderInspector() {
+            const flags = appState.detectedFlags;
+            const idx = appState.selectedFlagIndex;
+
+            if (flags.length === 0 || idx < 0 || idx >= flags.length) {
+                dom.inspectorEmptyState.classList.remove('hidden');
+                dom.inspectorActiveContent.classList.add('hidden');
+                dom.inspectorActiveContent.classList.remove('flex');
+                dom.inspectorNavControls.classList.add('hidden');
+                dom.inspectorNavControls.classList.remove('flex');
+                return;
+            }
+
+            const flag = flags[idx];
+            dom.inspectorEmptyState.classList.add('hidden');
+            dom.inspectorActiveContent.classList.remove('hidden');
+            dom.inspectorActiveContent.classList.add('flex');
+            dom.inspectorNavControls.classList.remove('hidden');
+            dom.inspectorNavControls.classList.add('flex');
+
+            dom.inspectorIndexIndicator.textContent = `${idx + 1} / ${flags.length}`;
+            dom.activeFlagCategoryBadge.textContent = flag.rule.categoryLabel;
+            dom.activeFlagPhrase.textContent = `"${flag.matchedText}"`;
+            dom.activeFlagReason.textContent = flag.rule.reason;
+            dom.customReplacementInput.value = '';
+
+            if (flag.rule.weight >= 8) {
+                dom.activeFlagSeverity.innerHTML = `<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> High AI Signal`;
+                dom.activeFlagSeverity.className = 'text-xs font-semibold text-rose-700 flex items-center gap-1';
+            } else {
+                dom.activeFlagSeverity.innerHTML = `<i data-lucide="info" class="w-3.5 h-3.5"></i> Moderate Signal`;
+                dom.activeFlagSeverity.className = 'text-xs font-semibold text-amber-700 flex items-center gap-1';
+            }
+
+            dom.alternativesGrid.innerHTML = '';
+            flag.rule.alternatives.forEach(alt => {
+                const formattedAlt = flag.rule.isStructuralTail ? alt : preserveCase(flag.matchedText, alt);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'text-left text-xs font-semibold px-3 py-2 rounded-xl bg-white/80 hover:bg-sky-600 hover:text-white text-slate-800 border border-sky-200/80 shadow-sm transition active:scale-95';
+                btn.textContent = formattedAlt;
+                btn.addEventListener('click', () => applyReplacement(idx, formattedAlt));
+                dom.alternativesGrid.appendChild(btn);
+            });
+        }
+
+        function applyReplacement(flagIndex, replacementText) {
+            const flag = appState.detectedFlags[flagIndex];
+            if (!flag) return;
+
+            const finalText = flag.rule.isStructuralTail
+                ? replacementText
+                : preserveCase(flag.matchedText, replacementText);
+
+            const before = appState.documentText.slice(0, flag.start);
+            const after = appState.documentText.slice(flag.end);
+            appState.documentText = before + finalText + after;
+            dom.thesisInput.value = appState.documentText;
+
+            appState.revisionsCount++;
+            appState.ignoredOffsets.clear();
+            scanAndRenderAll(flag.start, finalText.length);
+            showToast(`Replaced with "${finalText}"`);
+        }
+
+        function autoHumanizeAll() {
+            const lexicalFlags = appState.detectedFlags.filter(f => f.rule.category !== 'structural');
+            if (lexicalFlags.length === 0) {
+                showToast('No lexical clichés left to auto-replace. Review structural hints manually.');
+                return;
+            }
+
+            let updatedText = appState.documentText;
+            const sortedDesc = [...lexicalFlags].sort((a, b) => b.start - a.start);
+            sortedDesc.forEach(flag => {
+                const topAlt = flag.rule.alternatives[0] || flag.matchedText;
+                const formatted = preserveCase(flag.matchedText, topAlt);
+                updatedText = updatedText.slice(0, flag.start) + formatted + updatedText.slice(flag.end);
+            });
+
+            appState.documentText = updatedText;
+            dom.thesisInput.value = updatedText;
+            appState.revisionsCount += sortedDesc.length;
+            appState.ignoredOffsets.clear();
+            appState.selectedFlagIndex = -1;
+            scanAndRenderAll();
+            showToast(`Auto-humanized ${sortedDesc.length} AI cliché${sortedDesc.length === 1 ? '' : 's'}`);
+        }
+
+        // ============================================================================
+        // 10. CUSTOM TRIGGER PHRASE MANAGER (LOCALSTORAGE)
+        // ============================================================================
+        function renderCustomTriggers() {
+            if (appState.customRules.length === 0) {
+                dom.customTriggersList.innerHTML = `<span class="text-slate-500 italic">No custom triggers saved yet. Add a phrase above to extend your local dictionary.</span>`;
+                return;
+            }
+
+            dom.customTriggersList.innerHTML = '';
+            appState.customRules.forEach((rule, index) => {
+                const chip = document.createElement('span');
+                chip.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-100/90 text-sky-950 border border-sky-300 font-medium';
+                chip.innerHTML = `<span>"${escapeHtml(rule.phrase)}"</span>`;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'text-sky-700 hover:text-rose-700 font-bold ml-1';
+                removeBtn.textContent = '×';
+                removeBtn.title = 'Remove custom rule';
+                removeBtn.addEventListener('click', () => {
+                    appState.customRules.splice(index, 1);
+                    saveCustomRulesToStorage();
+                    renderCustomTriggers();
+                    scanAndRenderAll();
+                    showToast('Custom trigger removed');
+                });
+
+                chip.appendChild(removeBtn);
+                dom.customTriggersList.appendChild(chip);
+            });
+        }
+
+        // ============================================================================
+        // 11. OFFLINE SELF-DIAGNOSTIC CALIBRATION SUITE ("VERIFY ENGINE")
+        // ============================================================================
+        function runOfflineDiagnostics() {
+            const tests = [
+                {
+                    name: 'Test 1: Cliché-Heavy AI Thesis',
+                    text: SAMPLE_EXCERPTS.sociology,
+                    check: (m) => m.aiProbability >= 65,
+                    expectation: 'Expected ≥ 65% AI'
+                },
+                {
+                    name: 'Test 2: "Stealth AI" (Zero Clichés)',
+                    text: SAMPLE_EXCERPTS.stealth_ai,
+                    check: (m) => m.aiProbability >= 55,
+                    expectation: 'Expected ≥ 55% AI via Stylometrics'
+                },
+                {
+                    name: 'Test 3: Authentic Human Empirical Prose',
+                    text: `Between 2018 and 2023, our lab sampled 412 coastal tide gauges along the North Atlantic shelf. Mean spring high-water marks rose by 14.2 millimeters, though local subsidence accounted for nearly a third of that shift in Norfolk and Charleston. We excluded eleven stations whose acoustic sensors drifted during the 2020 storm season. When we ran a simple linear regression against regional wind stress, the residual variance dropped sharply.`,
+                    check: (m) => m.aiProbability <= 25,
+                    expectation: 'Expected ≤ 25% AI (Low False Positive)'
+                }
+            ];
+
+            dom.diagnosticsResultsGrid.innerHTML = '';
+            tests.forEach(t => {
+                const flags = extractFlagsFromText(t.text);
+                const metrics = analyzeTextMetrics(t.text, flags);
+                const passed = t.check(metrics);
+
+                const card = document.createElement('div');
+                card.className = `rounded-xl p-3 border ${passed ? 'bg-emerald-50/80 border-emerald-300 text-emerald-950' : 'bg-rose-50/80 border-rose-300 text-rose-950'}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <strong class="font-bold">${escapeHtml(t.name)}</strong>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${passed ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                            ${passed ? 'PASS' : 'CHECK'}
+                        </span>
+                    </div>
+                    <div class="text-[11px] opacity-90">
+                        Scored: <strong>${metrics.aiProbability}% AI</strong> · Clichés: <strong>${metrics.lexicalFlagCount}</strong> · Stylometric: <strong>${metrics.compositeStylometricScore}/100</strong>
+                    </div>
+                    <div class="text-[10px] opacity-75 mt-1">${escapeHtml(t.expectation)}</div>
+                `;
+                dom.diagnosticsResultsGrid.appendChild(card);
+            });
+
+            dom.diagnosticsDrawer.classList.remove('hidden');
+            showToast('Offline self-diagnostic verification complete');
+        }
+
+        // ============================================================================
+        // 12. EVENT LISTENERS & INITIALIZATION
+        // ============================================================================
+        function switchViewMode(mode) {
+            appState.viewMode = mode;
+            if (mode === 'interactive') {
+                appState.documentText = dom.thesisInput.value;
+                dom.interactiveViewContainer.classList.remove('hidden');
+                dom.interactiveBanner.classList.remove('hidden');
+                dom.rawEditContainer.classList.add('hidden');
+                dom.rawEditContainer.classList.remove('flex');
+
+                dom.modeInteractiveBtn.classList.add('bg-white', 'text-sky-900', 'shadow-sm');
+                dom.modeInteractiveBtn.classList.remove('text-slate-600');
+                dom.modeRawEditBtn.classList.remove('bg-white', 'text-sky-900', 'shadow-sm');
+                dom.modeRawEditBtn.classList.add('text-slate-600');
+
+                scanAndRenderAll();
+            } else {
+                dom.thesisInput.value = appState.documentText;
+                dom.interactiveViewContainer.classList.add('hidden');
+                dom.interactiveBanner.classList.add('hidden');
+                dom.rawEditContainer.classList.remove('hidden');
+                dom.rawEditContainer.classList.add('flex');
+
+                dom.modeRawEditBtn.classList.add('bg-white', 'text-sky-900', 'shadow-sm');
+                dom.modeRawEditBtn.classList.remove('text-slate-600');
+                dom.modeInteractiveBtn.classList.remove('bg-white', 'text-sky-900', 'shadow-sm');
+                dom.modeInteractiveBtn.classList.add('text-slate-600');
+
+                dom.thesisInput.focus();
+            }
+        }
+
+        function bindEvents() {
+            dom.modeInteractiveBtn.addEventListener('click', () => switchViewMode('interactive'));
+            dom.modeRawEditBtn.addEventListener('click', () => switchViewMode('raw'));
+            dom.applyRawChangesBtn.addEventListener('click', () => switchViewMode('interactive'));
+
+            dom.thesisInput.addEventListener('input', () => {
+                appState.documentText = dom.thesisInput.value;
+                appState.ignoredOffsets.clear();
+                appState.detectedFlags = extractFlagsFromText(appState.documentText);
+                updateMetricsAndScore();
+                renderDetectedList();
+            });
+
+            dom.loadSampleBtn.addEventListener('click', () => {
+                const key = dom.sampleSelect.value;
+                if (SAMPLE_EXCERPTS[key]) {
+                    appState.documentText = SAMPLE_EXCERPTS[key];
+                    dom.thesisInput.value = appState.documentText;
+                    appState.ignoredOffsets.clear();
+                    appState.selectedFlagIndex = -1;
+                    appState.revisionsCount = 0;
+                    switchViewMode('interactive');
+                    showToast('Sample thesis excerpt loaded');
+                }
+            });
+
+            dom.uploadFileBtn.addEventListener('click', () => dom.fileUploadInput.click());
+            dom.fileUploadInput.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    appState.documentText = String(evt.target.result || '');
+                    dom.thesisInput.value = appState.documentText;
+                    appState.ignoredOffsets.clear();
+                    appState.selectedFlagIndex = -1;
+                    appState.revisionsCount = 0;
+                    switchViewMode('interactive');
+                    showToast(`Loaded "${file.name}"`);
+                };
+                reader.readAsText(file);
+                e.target.value = '';
+            });
+
+            dom.copyTextBtn.addEventListener('click', () => {
+                const tempArea = document.createElement('textarea');
+                tempArea.value = appState.documentText;
+                tempArea.style.position = 'fixed';
+                tempArea.style.opacity = '0';
+                document.body.appendChild(tempArea);
+                tempArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Humanized document copied to clipboard');
+                } catch (err) {
+                    showToast('Could not copy automatically — please select and copy manually');
+                }
+                document.body.removeChild(tempArea);
+            });
+
+            dom.clearTextBtn.addEventListener('click', () => {
+                appState.documentText = '';
+                dom.thesisInput.value = '';
+                appState.ignoredOffsets.clear();
+                appState.selectedFlagIndex = -1;
+                appState.revisionsCount = 0;
+                scanAndRenderAll();
+                showToast('Document cleared');
+            });
+
+            dom.autoHumanizeBtn.addEventListener('click', autoHumanizeAll);
+
+            dom.categoryPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    dom.categoryPills.forEach(p => {
+                        p.classList.remove('active', 'bg-slate-800', 'text-white');
+                    });
+                    pill.classList.add('active', 'bg-slate-800', 'text-white');
+                    appState.categoryFilter = pill.getAttribute('data-filter') || 'all';
+                    renderInteractiveDocument();
+                });
+            });
+
+            dom.inspectFirstFlagBtn.addEventListener('click', () => {
+                if (appState.detectedFlags.length > 0) {
+                    selectFlag(0, true);
+                } else {
+                    showToast('No flagged phrases in the current document');
+                }
+            });
+
+            dom.prevFlagBtn.addEventListener('click', () => {
+                if (appState.detectedFlags.length === 0) return;
+                const nextIdx = (appState.selectedFlagIndex - 1 + appState.detectedFlags.length) % appState.detectedFlags.length;
+                selectFlag(nextIdx, true);
+            });
+
+            dom.nextFlagBtn.addEventListener('click', () => {
+                if (appState.detectedFlags.length === 0) return;
+                const nextIdx = (appState.selectedFlagIndex + 1) % appState.detectedFlags.length;
+                selectFlag(nextIdx, true);
+            });
+
+            dom.applyCustomReplacementBtn.addEventListener('click', () => {
+                const customVal = dom.customReplacementInput.value.trim();
+                if (!customVal || appState.selectedFlagIndex < 0) return;
+                applyReplacement(appState.selectedFlagIndex, customVal);
+            });
+
+            dom.customReplacementInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    dom.applyCustomReplacementBtn.click();
+                }
+            });
+
+            dom.ignoreSingleFlagBtn.addEventListener('click', () => {
+                const flag = appState.detectedFlags[appState.selectedFlagIndex];
+                if (!flag) return;
+                appState.ignoredOffsets.add(`${flag.start}:${flag.end}`);
+                scanAndRenderAll();
+                showToast('Ignored selected instance');
+            });
+
+            dom.toggleCustomDictBtn.addEventListener('click', () => {
+                dom.customDictDrawer.classList.toggle('hidden');
+            });
+
+            dom.addCustomTriggerBtn.addEventListener('click', () => {
+                const phrase = dom.customTriggerPhraseInput.value.trim();
+                if (!phrase) {
+                    showToast('Enter a word or phrase to add');
+                    return;
+                }
+                const altsRaw = dom.customTriggerAltInput.value.trim();
+                const alternatives = altsRaw
+                    ? altsRaw.split(',').map(s => s.trim()).filter(Boolean)
+                    : ['[revise phrase]', '[humanize]'];
+
+                appState.customRules.push({ phrase, alternatives });
+                saveCustomRulesToStorage();
+                dom.customTriggerPhraseInput.value = '';
+                dom.customTriggerAltInput.value = '';
+                renderCustomTriggers();
+                scanAndRenderAll();
+                showToast(`Added custom trigger "${phrase}"`);
+            });
+
+            dom.runDiagnosticsBtn.addEventListener('click', runOfflineDiagnostics);
+            dom.closeDiagnosticsBtn.addEventListener('click', () => {
+                dom.diagnosticsDrawer.classList.add('hidden');
+            });
+        }
+
+        function checkOfflineFallback() {
+            if (typeof window.tailwind === 'undefined') {
+                document.body.classList.add('offline-fallback-active');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkOfflineFallback();
+            loadCustomRulesFromStorage();
+            dom.thesisInput.value = appState.documentText;
+            renderCustomTriggers();
+            bindEvents();
+            scanAndRenderAll();
+            refreshIcons();
+        });
+    </script>
+</body>
+</html>
