@@ -111,32 +111,43 @@
     }
 
     /* =========================================================================
-       3. FULL-VIEWPORT HERO SECTION & AMBIENT GLASSMORPHISM EFFECTS
+       3. FIXED FULL-PAGE AMBIENT BACKDROP & SPIRAL RIBBON LAYER
        ========================================================================= */
-    .hero-section {
-      position: relative;
-      min-height: 100vh;
+    .ambient-backdrop {
+      position: fixed;
+      inset: 0;
       width: 100%;
-      display: flex;
-      align-items: center;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
       overflow: hidden;
       background:
-        radial-gradient(circle at 20% 25%, rgba(124, 58, 237, 0.14), transparent 46%),
-        radial-gradient(circle at 78% 22%, rgba(37, 99, 235, 0.14), transparent 44%),
-        radial-gradient(circle at 65% 82%, rgba(6, 182, 212, 0.12), transparent 46%),
+        radial-gradient(circle at 18% 22%, rgba(124, 58, 237, 0.14), transparent 46%),
+        radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.14), transparent 44%),
+        radial-gradient(circle at 62% 82%, rgba(6, 182, 212, 0.12), transparent 48%),
         var(--bg-dark);
-      isolation: isolate;
     }
 
-    /* Animated Ribbon Canvas Layer */
+    /* Animated 30-Strand Continuous Spiral Ribbon Canvas */
     #ribbonCanvas {
-      position: absolute;
+      position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       display: block;
       z-index: 2;
       pointer-events: none;
+    }
+
+    /* Full-Viewport Hero Section (Transparent so Fixed Spiral Shows Through) */
+    .hero-section {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background: transparent;
     }
 
     /* Softly Blurred 3D Neon Gradient Orbs */
@@ -257,36 +268,6 @@
         0 0 26px rgba(56, 189, 248, 0.4);
     }
 
-    /* Bottom Center Scroll Indicator Button */
-    .scroll-indicator {
-      position: absolute;
-      left: 50%;
-      bottom: 28px;
-      transform: translateX(-50%);
-      z-index: 15;
-      width: 46px;
-      height: 46px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.92);
-      color: #0d1117;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.45),
-        0 0 22px rgba(255, 255, 255, 0.22);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
-      animation: bounce-gentle 2.6s ease-in-out infinite;
-    }
-
-    .scroll-indicator:hover {
-      background: #ffffff;
-      box-shadow:
-        0 10px 28px rgba(0, 0, 0, 0.55),
-        0 0 26px rgba(56, 189, 248, 0.55);
-    }
-
     /* =========================================================================
        5. WEB-BASED APPS GRID & GLASSMORPHISM CARDS
        ========================================================================= */
@@ -397,14 +378,8 @@
       50% { transform: translate(-18px, -16px) scale(1.06); }
     }
 
-    @keyframes bounce-gentle {
-      0%, 100% { transform: translate(-50%, 0); }
-      50% { transform: translate(-50%, 6px); }
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .ambient-orb,
-      .scroll-indicator {
+      .ambient-orb {
         animation: none;
       }
       .app-card,
@@ -416,6 +391,23 @@
   </style>
 </head>
 <body class="selection:bg-cyan-500/30 selection:text-cyan-100">
+
+  <!-- =========================================================================
+       0. FIXED FULL-VIEWPORT AMBIENT BACKDROP & CONTINUOUS SPIRAL CANVAS
+       ========================================================================= -->
+  <div class="ambient-backdrop" aria-hidden="true">
+    <!-- Ambient 3D Neon Gradient Orbs -->
+    <div class="ambient-orb orb-purple"></div>
+    <div class="ambient-orb orb-blue"></div>
+    <div class="ambient-orb orb-cyan"></div>
+
+    <!-- Subtle Floating Code Brackets Behind the Glass -->
+    <span class="code-accent code-accent-left">&lt;/&gt;</span>
+    <span class="code-accent code-accent-right">&lt;/&gt;</span>
+
+    <!-- Continuous 30-Strand Animated Spiral Ribbon Wave Canvas -->
+    <canvas id="ribbonCanvas"></canvas>
+  </div>
 
   <!-- =========================================================================
        1. TOP GLASSMORPHIC NAVIGATION BAR (FIXED)
@@ -481,18 +473,6 @@
        2. FULL-VIEWPORT HERO SECTION (100vh)
        ========================================================================= -->
   <header id="home" class="hero-section pt-24 pb-20">
-    <!-- Ambient 3D Neon Gradient Orbs -->
-    <div class="ambient-orb orb-purple" aria-hidden="true"></div>
-    <div class="ambient-orb orb-blue" aria-hidden="true"></div>
-    <div class="ambient-orb orb-cyan" aria-hidden="true"></div>
-
-    <!-- Subtle Floating Code Brackets Behind the Glass -->
-    <span class="code-accent code-accent-left" aria-hidden="true">&lt;/&gt;</span>
-    <span class="code-accent code-accent-right" aria-hidden="true">&lt;/&gt;</span>
-
-    <!-- High-Precision Sweeping Multi-Line Ribbon Wave Canvas -->
-    <canvas id="ribbonCanvas" aria-hidden="true"></canvas>
-
     <!-- Hero Foreground Content Container -->
     <div class="relative z-10 w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Left-Aligned Sleek Frosted Glassmorphism Panel -->
@@ -515,11 +495,6 @@
 
         <!-- Concise 2-Line Description -->
         <p class="mt-4 text-sm sm:text-base leading-relaxed text-slate-300/85 max-w-lg">
-          Privacy-first, browser-native academic tools built for clarity—helping researchers verify literature originality and refine scholarly writing with zero setup.
-        </p>
-
-        <!-- Concise 2-Line Description -->
-        <p class="mt-4 text-sm sm:text-base leading-relaxed text-slate-300/85 max-w-lg">
           A curated workspace of streamlined, browser-based academic and research tools designed to keep your workflow clear and distraction-free.
         </p>
 
@@ -537,17 +512,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Bottom Center Circular Scroll Indicator -->
-    <a
-      href="#apps"
-      class="scroll-indicator"
-      aria-label="Scroll down to Web-Based Apps"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7l5 5 5-5M7 13l5 5 5-5" />
-      </svg>
-    </a>
   </header>
 
   <!-- =========================================================================
@@ -939,7 +903,7 @@
               Switchback
             </h3>
             <p class="mt-2 text-sm leading-relaxed text-slate-400">
-              Privacy-first lexical &amp; 7-axis stylometric thesis detector that flags AI clichés and structural patterns with one-click scholarly replacements.
+              Privacy-first lexical &amp; 7-axis stylometric detector for academic theses and manuscripts.
             </p>
           </div>
         </div>
@@ -1146,9 +1110,10 @@
       }
 
       /**
-       * Sweeping Multi-Line Ribbon Wave Renderer
-       * Draws 28 smooth parallel cubic Bézier curves flowing from top-right,
-       * curving gracefully along the right side, and sweeping down to bottom-left.
+       * Continuous 30-Strand Animated Spiral Ribbon Wave Renderer
+       * Renders a fixed full-viewport luminous ribbon that undulates organically
+       * over time and smoothly unwinds downward in response to vertical page scroll,
+       * flowing seamlessly behind the Hero, Web-Based Apps, About, and Footer.
        */
       function initRibbonCanvas() {
         try {
@@ -1158,95 +1123,121 @@
           if (!ctx) return;
 
           const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const lineCount = 28;
+          const lineCount = 30;
+          const sampleSteps = 72;
           let width = 0;
           let height = 0;
           let dpr = Math.min(window.devicePixelRatio || 1, 2);
           let time = 0;
 
-          // Subtle mouse offset for interactive depth
+          // Smoothly lerped scroll & pointer state
+          let scrollTarget = window.scrollY || 0;
+          let scrollCurrent = scrollTarget;
           const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
 
           function resizeCanvas() {
-            const parent = canvas.parentElement;
-            if (!parent) return;
-            width = parent.clientWidth;
-            height = parent.clientHeight;
+            width = window.innerWidth;
+            height = window.innerHeight;
             dpr = Math.min(window.devicePixelRatio || 1, 2);
             canvas.width = Math.floor(width * dpr);
             canvas.height = Math.floor(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            drawRibbon();
+            drawSpiralRibbon();
           }
 
-          function drawRibbon() {
+          function drawSpiralRibbon() {
             ctx.clearRect(0, 0, width, height);
 
-            // Smoothly ease pointer movement
+            // Ease scroll and pointer parallax for silky motion
+            scrollCurrent += (scrollTarget - scrollCurrent) * 0.065;
             pointer.x += (pointer.targetX - pointer.x) * 0.05;
             pointer.y += (pointer.targetY - pointer.y) * 0.05;
 
             const isMobile = width < 768;
-            const spreadScale = isMobile ? 0.65 : 1;
+            const ribbonSpread = isMobile ? Math.min(width * 0.34, 150) : Math.min(width * 0.24, 260);
+            const primaryAmp = isMobile ? width * 0.34 : width * 0.31;
+            const secondaryAmp = isMobile ? width * 0.12 : width * 0.11;
+            const centerXBase = isMobile ? width * 0.56 : width * 0.62;
+
+            // Vertical sampling extends beyond viewport top/bottom so strands never clip
+            const yStart = -height * 0.14;
+            const ySpan = height * 1.28;
 
             for (let i = 0; i < lineCount; i++) {
-              const t = i / (lineCount - 1); // 0..1 across the ribbon thickness
-              const centered = t - 0.5;      // -0.5..0.5
-              const waveBreath = Math.sin(time * 0.85 + t * 2.2) * 14 * spreadScale;
-              const secondaryWave = Math.cos(time * 0.6 + t * 3.1) * 10 * spreadScale;
+              const t = i / (lineCount - 1);   // 0..1 across ribbon width
+              const centered = t - 0.5;        // -0.5..0.5
+              const coreFactor = 1 - Math.abs(centered) * 1.7; // brighter core strands
+              const clampedCore = Math.max(0.15, Math.min(1, coreFactor));
 
-              // Create a sleek translucent gradient per strand (white -> cyan -> violet)
-              const grad = ctx.createLinearGradient(width * 0.95, 0, width * 0.08, height);
-              const edgeFade = 1 - Math.abs(centered) * 0.75;
-              const alphaBase = (0.14 + edgeFade * 0.34);
+              // Luminous multi-stop gradient: crisp white-silver core with cyan, electric blue & purple accents
+              const grad = ctx.createLinearGradient(width * 0.85, 0, width * 0.15, height);
+              const baseAlpha = 0.09 + clampedCore * 0.32;
 
-              grad.addColorStop(0.0, `rgba(255, 255, 255, ${(alphaBase * 0.85).toFixed(3)})`);
-              grad.addColorStop(0.35, `rgba(186, 230, 253, ${(alphaBase * 0.78).toFixed(3)})`);
-              grad.addColorStop(0.68, `rgba(167, 139, 250, ${(alphaBase * 0.65).toFixed(3)})`);
-              grad.addColorStop(1.0, `rgba(255, 255, 255, ${(alphaBase * 0.45).toFixed(3)})`);
+              grad.addColorStop(0.0, `rgba(241, 245, 249, ${(baseAlpha * 0.92).toFixed(3)})`);
+              grad.addColorStop(0.28, `rgba(125, 211, 252, ${(baseAlpha * 0.85).toFixed(3)})`);
+              grad.addColorStop(0.56, `rgba(96, 165, 250, ${(baseAlpha * 0.78).toFixed(3)})`);
+              grad.addColorStop(0.82, `rgba(167, 139, 250, ${(baseAlpha * 0.72).toFixed(3)})`);
+              grad.addColorStop(1.0, `rgba(226, 232, 240, ${(baseAlpha * 0.58).toFixed(3)})`);
 
               ctx.beginPath();
               ctx.strokeStyle = grad;
-              ctx.lineWidth = i % 4 === 0 ? 1.35 : 0.95;
+              ctx.lineWidth = Math.abs(centered) < 0.16 ? 1.35 : (i % 4 === 0 ? 1.15 : 0.85);
 
-              // Segment 1: Top-right entry curving inward toward upper-right-center
-              const p0x = width * (1.06 + centered * 0.04);
-              const p0y = height * (0.04 + t * 0.28) + waveBreath * 0.4;
+              for (let s = 0; s <= sampleSteps; s++) {
+                const u = s / sampleSteps;
+                const y = yStart + u * ySpan;
 
-              const c1x = width * (0.68 - t * 0.08) + pointer.x * 18;
-              const c1y = height * (-0.06 + t * 0.24) - waveBreath * 0.6;
+                // Continuous helical phase driven by viewport Y + smooth vertical scroll offset
+                const worldY = y + scrollCurrent * 0.72;
+                const theta = worldY * 0.0042;
 
-              const c2x = width * (0.58 + t * 0.14) + pointer.x * 12;
-              const c2y = height * (0.36 + t * 0.10) + secondaryWave;
+                // Sweeping spiral spine
+                const spineX =
+                  centerXBase +
+                  Math.sin(theta * 1.05 - time * 0.55) * primaryAmp +
+                  Math.cos(theta * 0.52 + time * 0.32) * secondaryAmp;
 
-              // Mid-anchor: Graceful ribbon twist along the right side
-              const p1x = width * (0.86 + centered * 0.12) + pointer.x * 20;
-              const p1y = height * (0.62 + centered * 0.16) + waveBreath;
+                // 3D ribbon twist along the spiral axis
+                const twistCos = Math.cos(theta * 1.35 + time * 0.42);
+                const twistSin = Math.sin(theta * 1.35 + time * 0.42);
 
-              // Segment 2: Sweep from right-side curve across the lower hero to bottom-left
-              const c3x = width * (1.02 - t * 0.10) + pointer.x * 14;
-              const c3y = height * (0.94 + centered * 0.12) + secondaryWave;
+                const xOffset =
+                  centered * ribbonSpread * (0.38 + 0.62 * twistCos) +
+                  Math.sin(theta * 1.8 + t * 2.6 + time * 0.7) * 9 +
+                  pointer.x * (16 + centered * 18);
 
-              const c4x = width * (0.46 - t * 0.14) - pointer.x * 16;
-              const c4y = height * (0.58 + t * 0.14) - waveBreath * 0.8;
+                const yOffset =
+                  centered * (ribbonSpread * 0.24) * twistSin +
+                  pointer.y * (10 + centered * 10);
 
-              const p2x = width * (0.04 + t * 0.14) - pointer.x * 10;
-              const p2y = height * (1.08 + centered * 0.06);
+                const px = spineX + xOffset;
+                const py = y + yOffset;
 
-              ctx.moveTo(p0x, p0y);
-              ctx.bezierCurveTo(c1x, c1y, c2x, c2y, p1x, p1y);
-              ctx.bezierCurveTo(c3x, c3y, c4x, c4y, p2x, p2y);
+                if (s === 0) {
+                  ctx.moveTo(px, py);
+                } else {
+                  ctx.lineTo(px, py);
+                }
+              }
+
               ctx.stroke();
             }
           }
 
           function animate() {
-            time += 0.008;
-            drawRibbon();
+            time += 0.0085;
+            drawSpiralRibbon();
             requestAnimationFrame(animate);
           }
 
-          // Subtle pointer parallax on desktop
+          window.addEventListener('scroll', () => {
+            scrollTarget = window.scrollY || 0;
+            if (prefersReducedMotion) {
+              scrollCurrent = scrollTarget;
+              drawSpiralRibbon();
+            }
+          }, { passive: true });
+
           window.addEventListener('mousemove', (e) => {
             if (prefersReducedMotion) return;
             pointer.targetX = (e.clientX / Math.max(width, 1) - 0.5) * 1.4;
